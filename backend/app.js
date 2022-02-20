@@ -6,9 +6,8 @@ const app = express();
 require('dotenv').config();
 require('./config/db')
 const path = require('path');
-const db = require('./models/index');
+const db = require('./models');
 //const sequelize = require('sequelize');
-// const db=require('./models');
 db.sequelize.sync();
 
 
@@ -31,7 +30,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 
 //routes
-// app.use('/api/user', userRoutes);
+app.use('/api/user', userRoutes);
 
 
 module.exports = app;
