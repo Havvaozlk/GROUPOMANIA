@@ -78,7 +78,14 @@ exports.login = (req, res, next) => {
   };
 
 //fonction pour supprimer un compte
-
+exports.deleteUser = (req, res, next) => {
+  models.users.findOne ({
+    where: {id :req.params.id}
+  })
+  models.users.destroy({where: {id: req.params.id}})
+  .then((user) => res.status(200).json(user) ({message: 'Compte supprimé !'}))
+  .catch(error => res.status(500).json({error}));
+}
 
 //afficher tout les utilisateurs
   exports.getAllUsers = (req, res, next) => {
