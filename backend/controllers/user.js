@@ -95,4 +95,19 @@ exports.getOneUser = (req,res, next) => {
   .then((user) => res.status(200).json(user))
   .catch(error => res.status(404).json({error:error}))
 }
-  
+
+//modifier un utilisateur
+exports.updateUser = (req,res,next) => {
+  models.users.findOne({ where: {id: req.params.id}
+  })
+  .then((user) => {
+    firstName = req.body.firstName;
+    lastName = req.body.lastName;
+    email = req.body.email;
+    user.update()
+    .then(() => res.status(201).json({message: 'Votre profil a été modifié ! ' }))
+    .catch(error => res.status(400).json({ error }));
+        })
+        .catch(error => res.status(500).json({ error }));
+
+}
