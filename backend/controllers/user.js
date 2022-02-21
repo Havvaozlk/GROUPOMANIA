@@ -86,4 +86,13 @@ exports.login = (req, res, next) => {
     .then((users) => res.status(200).json(users))
         .catch(error => res.status(400).json({ error }));
 }
+
+//afficher un utilisateur
+exports.getOneUser = (req,res, next) => {
+  models.users.findOne({
+    where: {id: req.params.id}
+  })
+  .then((user) => res.status(200).json(user))
+  .catch(error => res.status(404).json({error:error}))
+}
   
