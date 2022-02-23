@@ -5,14 +5,27 @@ const bcrypt = require('bcrypt');
 const models = require('../models/index');
 const { users } = require('../models/index');
 const auth = require('../middleware/auth');
+const passwordValidator = require('password-validator');
 //on installe et importe le package pour créer et vérifier les tokens d'authentification
 //qui permettent aux utilisateurs de ne se connecter qu'une seule fois à leur compte 
 const jwt = require('jsonwebtoken');
+const emailValidator = require('email-validator');
 
-
+var schema = new passwordValidator();
+schema
+.is().min(8)   //minimum 8 caractères                                 
+.is().max(100)  //max 100                                
+.has().uppercase()   //doit contenir des lettres majuscule                           
+.has().lowercase()    //  doit contenir des lettres minuscule                        
+.has().digits(1)       //doit contenir au moins un chiffre                         
+.has().not().spaces()    //pas d'espace                      
+.is().not().oneOf(['Passw0rd', 'Password123']); //ne doit pas etre égale à
 
 //fonction inscription
 exports.signup = (req, res, next) => {
+  if (!emailValidator.validate(req.body.email) || (!schema.validate(req.body.password))) {  
+    throw { error: " invalide !" }  
+  } else if (emailValidator.validate(req.body.email) && (schema.validate(req.body.password))) 
     //on hash le mot de passe avec bcrypt, on lui passe le mot de passe et le nombre de tour que l'algorithme va faire
     bcrypt.hash(req.body.password, 10)
         //on récupere le hash de mdp
@@ -34,11 +47,10 @@ exports.signup = (req, res, next) => {
                         'RANDOM_TOKEN_SECRET',
                         { expiresIn: '24h' }
                     ),
-                    message: 'utilisateur crée !'
                 }));
             })
                 .catch(error => res.status(500).json({ error }));
-}
+          }
 
 //fonction pour se connecter a un compte existant
 exports.login = (req, res, next) => {
@@ -151,3 +163,24 @@ exports.updateUser = (req, res, next) => {
             }))
           });
 }
+
+// exports.adminDeleteUser = (req, res, next) => {
+//   models.users.findOne ({
+//     where: {id :req.params.id}
+//   })
+//       .then(users => {
+//         if (users.admin !== 1) {
+//           console.log(users.admin);
+//             return res.status(401).json({
+//               error : new Error('Unauthorized request!')
+//             })
+//            } else {
+//             models.users.destroy({where: {id: req.params.id}})
+//             .then((user) => res.status(200).json(user) ({message: 'Compte supprimé !'}))
+//             .catch(error => res.status(400).json({error}));
+               
+//              } })
+//               .catch(error => res.status(500).json({error}))
+//             ;
+//           }
+
