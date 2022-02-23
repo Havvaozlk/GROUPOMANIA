@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const userRoutes = require('./routes/user');
+const postRoutes = require('./routes/post');
 const userModel = require('./models/user')
 const app = express();
 require('dotenv').config();
@@ -8,7 +9,7 @@ require('./config/db')
 const path = require('path');
 const db = require('./models');
 //const sequelize = require('sequelize');
-db.sequelize.sync();
+db.sequelize.sync({force: false});
 
 
 
@@ -31,6 +32,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 //routes
 app.use('/api/user', userRoutes);
+app.use('api/post', postRoutes);
 
 
 module.exports = app;

@@ -3,7 +3,7 @@
 const bcrypt = require('bcrypt');
 //on importe notre modele user
 const models = require('../models/index');
-const { users } = require('../models/index')
+const { users } = require('../models/index');
 const auth = require('../middleware/auth');
 //on installe et importe le package pour créer et vérifier les tokens d'authentification
 //qui permettent aux utilisateurs de ne se connecter qu'une seule fois à leur compte 
@@ -18,7 +18,7 @@ exports.signup = (req, res, next) => {
         //on récupere le hash de mdp
         .then(hash => {
             //on crée le nouvel utilisateur avecnotre modele Mongoose
-            User.create({
+            models.users.create({
                 id: req.body.id,
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
@@ -26,11 +26,11 @@ exports.signup = (req, res, next) => {
                 password: hash,
                 admin: req.body.admin,
             })
-                .then((user) => res.status(200).json({
-                    userId: user.id,
-                    admin: user.admin,
+                .then((users) => res.status(200).json({
+                    userId: users.id,
+                    admin: users.admin,
                     token: jwt.sign(
-                        { userId: user.id },
+                        { userId: users.id },
                         'RANDOM_TOKEN_SECRET',
                         { expiresIn: '24h' }
                     ),
@@ -54,9 +54,11 @@ exports.login = (req, res, next) => {
         bcrypt.compare(req.body.password, users.password)
           .then(valid => {
             //si elle n'est pas valable 
-            if (!valid) {
+            if (valid) {
+              console.log(req.body.password);
+              console.log(users.password);
               return res.status(401).json({ error: 'Mot de passe incorrect !' });
-            }
+            } else {
             //si elle est valable on envoie un objet json avec le userId et token
             res.status(200).json({
                 userId: users.id,
@@ -70,21 +72,33 @@ exports.login = (req, res, next) => {
                   //nous définissons ensuite la fin de validité du token à 24H
                   { expiresIn: '24h' }
                 )
-              });
+              })}
           })
           .catch(error => res.status(500).json({ error }));
       })
       .catch(error => res.status(500).json({ error }));
   };
 
-//fonction pour supprimer un compte
+//fonction pour supprimer son compte
 exports.deleteUser = (req, res, next) => {
   models.users.findOne ({
     where: {id :req.params.id}
   })
+  .then(users => {
+    if (users.id !== req.auth.userId) {
+      console.log(req.auth.userId);
+      console.log(users.id);
+        return res.status(401).json({
+          error : new Error('Unauthorized request!')
+        })
+      } else {
   models.users.destroy({where: {id: req.params.id}})
   .then((user) => res.status(200).json(user) ({message: 'Compte supprimé !'}))
-  .catch(error => res.status(500).json({error}));
+  .catch(error => res.status(400).json({error}));
+     
+   } })
+    .catch(error => res.status(500).json({error}))
+  ;
 }
 
 //afficher tout les utilisateurs
@@ -100,7 +114,7 @@ exports.getOneUser = (req,res, next) => {
     where: {id: req.params.id}
   })
   .then((user) => res.status(200).json(user))
-  .catch(error => res.status(404).json({error:error}))
+  .catch(error => res.status(400).json({error:error}))
 }
 
 //modifier un utilisateur
