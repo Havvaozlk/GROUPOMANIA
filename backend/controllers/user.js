@@ -101,12 +101,13 @@ exports.deleteUser = (req, res, next) => {
   ;
 }
 
-//afficher tout les utilisateurs
+// afficher tout les utilisateurs
   exports.getAllUsers = (req, res, next) => {
-    models.users.findAll({attributes : ['id', 'email', 'firstName', 'lastName']})
+     models.users.findAll({attributes : ['id', 'email', 'firstName', 'lastName', 'admin']})
     .then((users) => res.status(200).json(users))
         .catch(error => res.status(400).json({ error }));
 }
+
 
 //afficher un utilisateur
 exports.getOneUser = (req,res, next) => {
@@ -117,18 +118,36 @@ exports.getOneUser = (req,res, next) => {
   .catch(error => res.status(400).json({error:error}))
 }
 
-//modifier un utilisateur
-exports.updateUser = (req,res,next) => {
-  models.users.findOne({ where: {id: req.params.id}
-  })
-  .then((user) => {
-    firstName = req.body.firstName;
-    lastName = req.body.lastName;
-    email = req.body.email;
-    user.update()
-    .then(() => res.status(201).json({message: 'Votre profil a été modifié ! ' }))
-    .catch(error => res.status(400).json({ error }));
-        })
-        .catch(error => res.status(500).json({ error }));
-
+//modifier son profil
+exports.updateUser = (req, res, next) => {
+  const userObject = req.file ? {
+    ...req.body.users,
+    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+} : {
+    ...req.body
+};
+  models.users.findOne({ where: {id: req.params.id} })
+    .then((users) => {
+      if (users.id !== req.auth.userId) {
+        return res.status(403).json({
+          error: new Error('Unauthorized request!')
+        });
+      }
+          models.users.update({ ...userObject }, { where: { id: req.params.id } })
+            .then((users) => res.status(200).json({
+              message: 'Profil modifié !',
+              users : {
+                id: users.id,
+                firstName: users.firstName,
+                lastName: users.lastName,
+                email: users.email,
+                password: users.password,
+                admin: users.admin,
+              
+              }
+            }))
+            .catch((error) => res.status(400).json({
+              error
+            }))
+          });
 }
