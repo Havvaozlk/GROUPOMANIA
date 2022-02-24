@@ -5,4 +5,5 @@ const multer= require('../middleware/multer-config');
 const commentCtrl = require('../controllers/comment');
 
 router.get('/:id', auth, commentCtrl.getOneComment);
+router.get('/', auth, commentCtrl.getAllComments);
 module.exports= router;
