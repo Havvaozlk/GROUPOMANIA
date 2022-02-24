@@ -1,7 +1,7 @@
 
 
 module.exports = (sequelize, Sequelize) => {
-    const post = sequelize.define("post", {
+    const Post = sequelize.define("post", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true
@@ -18,7 +18,7 @@ module.exports = (sequelize, Sequelize) => {
     },
     {
         sequelize,
-        modelName: 'post',
+        modelName: 'Post',
     });
-    return post;
+    return Post;
   };

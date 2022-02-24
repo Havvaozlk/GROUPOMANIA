@@ -105,7 +105,7 @@ exports.deleteUser = (req, res, next) => {
         })
       } else {
   models.users.destroy({where: {id: req.params.id}})
-  .then((user) => res.status(200).json(user) ({message: 'Compte supprimé !'}))
+  .then(() => res.status(200).json({message: 'Compte supprimé !'}))
   .catch(error => res.status(400).json({error}));
      
    } })
@@ -139,8 +139,12 @@ exports.updateUser = (req, res, next) => {
     ...req.body
 };
   models.users.findOne({ where: {id: req.params.id} })
+
     .then((users) => {
+      console.log(users);
       if (users.id !== req.auth.userId) {
+        console.log(users.id);
+        console.log(req.auth.userId);
         return res.status(403).json({
           error: new Error('Unauthorized request!')
         });

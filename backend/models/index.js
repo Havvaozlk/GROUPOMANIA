@@ -1,6 +1,7 @@
 
 const dbConfig = require('../config/db');
 const Sequelize = require("sequelize");
+const path = require('path');
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
   port: 3306,
@@ -27,6 +28,7 @@ db.sequelize = sequelize;
 
 db.users = require("./user")(sequelize, Sequelize);
 db.posts = require('./post')(sequelize, Sequelize);
+db.comments= require('./comment')(sequelize, Sequelize);
 
 module.exports = db;
 

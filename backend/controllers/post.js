@@ -1,69 +1,77 @@
 
 const models =require('../models/index');
-const { posts } = require('../models/index');
+const Post= models.posts;
 const jwt = require('jsonwebtoken');
-const user = require('../models/user');
 const auth = require('../middleware/auth');
-const post = require('../models/post');
-//const { post } = require('../routes/user.js');
+const db = require('../config/db');
 
-
-//créer un post
-exports.createPost = (req, res, next) => {
-    if (!req.body.content) {
-        res.status(400).send({
-            message: "impossible de publier un message vide !"
-        });
-        return
-    }
-    if (req.file) {
-        models.posts.create({
-            id: req.auth.userId,
-            content: req.body.content,
-            status: req.body.status,
-            image: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-        })
-        .then(() => res.status(201).json({
-            message: 'post crée !'
-        }))
-        .catch((error) => res.status(400).json
-        ({error, message: 'erreur1'}) )
-    } else {
-        post.create({
-            id: req.auth.userId,
-            content: req.body.content,
-            status: req.body.status,
-            image: null,
-        })
-        .then(() => res.status(201).json({
-            message: 'post crée !'
-        }))
-        .catch((error) => res.status(400).json
-        ({error, message: 'erreur2'}) )
-    }
-
-}
-
-//afficher tout les post
-exports.getAllPost = (req, res, next) => {
-    models.posts.findAll({
-        include: [{
-            model: user,
-            attributes : ['fistName', 'lastName', 'email', 'admin']
-        }]
-        
+//AFFICHER UN POST
+exports.getOnePost = (req,res, next) => {
+    Post.findOne({
+      where: {id: req.params.id}
     })
-    .then((posts) => res.status(200).json(posts))
-        .catch(error => res.status(400).json({ error }));
+    .then((post) => res.status(200).json(post))
+    .catch(error => res.status(400).json({error:error}))
+  }
+
+// CREER UN POST
+exports.createPost = (req, res, next) => {
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+    const userId = decodedToken.userId;
+
+if (!req.file) {
+    return Post.create({
+        id: userId,
+        content: req.body.content,
+        status: req.body.status,
+        image: "",
+    })
+        .then((posts) => res.status(201).json(posts))
+        .catch((error) => {console.log(error)
+             res.status(500).json(error)});
+
+    } else if (req.file) {
+        Post.create({
+            id: userId,
+            content: req.body.content,
+            status: req.body.status,
+            image: `${req.protocol}://${req.get("host")}/images/${
+                req.file.filename
+            }`,
+        })
+            .then((posts) => res.status(201).json({posts}))
+            .catch((error) => res.status(500).json(error));
+    }
+};
+
+
+//AFFICHER TOUT LES POST
+exports.getAllPosts= (req, res, next) => {
+    Post.findAll({attributes : ['id', 'content', 'status', 'image', 'userId']})
+   .then((posts) => res.status(200).json(posts))
+    .catch(error => res.status(400).json({ error }));
 }
 
 //supprimer un post
 exports.deletePost = (req, res, next) => {
-    models.posts.findOne ({
-      where: {id:req.params.id}
+    Post.findOne ({
+      where: {id :req.params.id}
     })
-    models.posts.destroy({where: {id: req.params.id}})
-    .then(() => res.status(200).json(user) ({message: 'Post supprimé !'}))
+    .then(posts => {
+      if (posts.id !== req.auth.userId) {
+        console.log('post.id' + req.auth.userId);
+        console.log('posts.id' + posts.id);
+          return res.status(403).json({
+            error : new Error('Unauthorized request!')
+          })
+        } else {
+    Post.destroy({where: {id: req.params.id}})
+    .then(() => res.status(200).json({message: 'Post supprimé !'}))
     .catch(error => res.status(400).json({error}));
-  };
-    
+       
+     } })
+      .catch(error => res.status(500).json({error}))
+    ;
+  }
+
