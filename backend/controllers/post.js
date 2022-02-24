@@ -75,3 +75,31 @@ exports.deletePost = (req, res, next) => {
     ;
   }
 
+//MODIFIER SON POST
+exports.updatePost = (req, res, next) => {
+    const postObject = req.file ? {
+      ...req.body.posts,
+      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+  } : {
+      ...req.body
+  };
+    Post.findOne({ where: {id: req.params.id} })
+  
+      .then((posts) => {
+        console.log(posts);
+        if (posts.id !== req.auth.userId) {
+          console.log(posts.id);
+          console.log(req.auth.userId);
+          return res.status(403).json({
+            error: new Error('Unauthorized request!')
+          });
+        }
+            Post.update({ ...postObject }, { where: { id: req.params.id } })
+              .then((posts) => res.status(200).json({
+                message: 'Post modifié !'
+              }))
+              .catch((error) => res.status(400).json({
+                error
+              }))
+            });
+  }
