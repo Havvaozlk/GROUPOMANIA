@@ -41,3 +41,32 @@ exports.deleteComment = (req, res, next) => {
       .catch(error => res.status(500).json({error}))
     ;
   }
+
+  //MODIFIER UN COMMENTAIRE
+  exports.updateComment = (req, res, next) => {
+    const commentObject = req.file ? {
+      ...req.body.comments,
+      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+  } : {
+      ...req.body
+  };
+    Comment.findOne({ where: {id: req.params.id} })
+  
+      .then((comments) => {
+        console.log(comments);
+        if (comments.id !== req.auth.userId) {
+        //   console.log(posts.id);
+        //   console.log(req.auth.userId);
+          return res.status(403).json({
+            error: new Error('Unauthorized request!')
+          });
+        }
+            Comment.update({ ...commentObject }, { where: { id: req.params.id } })
+              .then((comments) => res.status(200).json({
+                message: 'Commentaire modifié !'
+              }))
+              .catch((error) => res.status(400).json({
+                error
+              }))
+            });
+  }
