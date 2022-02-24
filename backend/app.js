@@ -34,7 +34,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 //routes
 app.use('/api/user', userRoutes);
 app.use('/api/post', postRoutes);
-// app.use('/api/comment', commentRoutes);
+app.use('/api/comment', commentRoutes);
 
 
 module.exports = app;
