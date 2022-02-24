@@ -19,3 +19,25 @@ exports.getAllComments= (req, res, next) => {
    .then((comments) => res.status(200).json(comments))
     .catch(error => res.status(400).json({ error }));
 }
+
+//SUPPRIMER UN COMMENTAIRE
+exports.deleteComment = (req, res, next) => {
+    Comment.findOne ({
+      where: {id :req.params.id}
+    })
+    .then(comments => {
+      if (comments.id !== req.auth.userId) {
+        console.log('comments.id' + comments.id);
+        console.log('req.auth.userId' + req.auth.userId);
+          return res.status(403).json({
+            error : new Error('Unauthorized request!')
+          })
+        } else {
+    Comment.destroy({where: {id: req.params.id}})
+    .then(() => res.status(200).json({message: 'Post supprimé !'}))
+    .catch(error => res.status(400).json({error}));
+       
+     } })
+      .catch(error => res.status(500).json({error}))
+    ;
+  }
