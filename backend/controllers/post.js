@@ -16,34 +16,43 @@ exports.getOnePost = (req,res, next) => {
 
 // CREER UN POST
 exports.createPost = (req, res, next) => {
-    const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
-    const userId = decodedToken.userId;
-
-if (!req.file) {
-    return Post.create({
-        id: userId,
-        content: req.body.content,
-        status: req.body.status,
-        image: "",
-    })
-        .then((posts) => res.status(201).json(posts))
-        .catch((error) => {console.log(error)
-             res.status(500).json(error)});
-
-    } else if (req.file) {
-        Post.create({
-            id: userId,
-            content: req.body.content,
-            status: req.body.status,
-            image: `${req.protocol}://${req.get("host")}/images/${
-                req.file.filename
-            }`,
-        })
-            .then((posts) => res.status(201).json({posts}))
-            .catch((error) => res.status(500).json(error));
+    if (!req.body.content) {
+        res.status(400).send({
+            message: "impossible de publier un message vide !"
+        });
+        return
     }
-};
+    if (req.file) {
+        Post.create({
+                id: req.body.id,
+                content: req.body.content,
+                status: req.body.status,
+                imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+            })
+            .then(() => res.status(201).json({
+                message: 'post créé !'
+            }))
+            .catch((error) => res.status(400).json({
+                error,
+                message: 'Vous ne pouvez pas publier un post'
+            }))
+    } else {
+        Post.create({
+                id: req.body.id,
+                content: req.body.content,
+                status: req.body.status,
+                imageUrl: null,
+            })
+            .then(() => res.status(201).json({
+                message: 'post créé !'
+            }))
+            .catch((error) => res.status(400).json({
+                error,
+                message: 'Vous ne pouvez pas publier un post'
+            }))
+    }
+}
+
 
 
 //AFFICHER TOUT LES POST

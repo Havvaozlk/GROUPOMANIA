@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
 const commentRoutes = require('./routes/comment');
+const helmet = require('helmet');
 const userModel = require('./models/user')
 const app = express();
 require('dotenv').config();
@@ -35,6 +36,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/api/user', userRoutes);
 app.use('/api/post', postRoutes);
 app.use('/api/comment', commentRoutes);
+app.use(helmet());
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 
 module.exports = app;
