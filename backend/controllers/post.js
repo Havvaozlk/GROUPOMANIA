@@ -68,7 +68,7 @@ exports.deletePost = (req, res, next) => {
       where: {id :req.params.id}
     })
     .then(posts => {
-      if (posts.use !== req.auth.userId) {
+      if (posts.userId !== req.auth.userId) {
         console.log('post.id' + req.auth.userId);
         console.log('posts.id' + posts.id);
           return res.status(403).json({
@@ -96,9 +96,7 @@ exports.updatePost = (req, res, next) => {
   
       .then((posts) => {
         console.log(posts);
-        if (posts.id !== req.auth.userId) {
-          console.log(posts.id);
-          console.log(req.auth.userId);
+        if (posts.userId !== req.auth.userId) {
           return res.status(403).json({
             error: new Error('Unauthorized request!')
           });

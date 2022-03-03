@@ -4,6 +4,28 @@ const jwt = require('jsonwebtoken');
 const auth = require('../middleware/auth');
 const db = require('../config/db');
 
+// CREER UN COMMENTAIRE
+exports.createComment = (req, res, next) => {
+  if (!req.body.content) {
+      res.status(400).send({
+          message: "impossible de publier un commentaire vide !"
+      });
+      return
+  } else {
+      Comment.create({
+              userId: req.auth.userId,
+              content: req.body.content,
+          })
+          .then(() => res.status(201).json({
+              message: 'Commentaire créé !'
+          }))
+          .catch((error) => res.status(400).json({
+              error,
+              message: 'Vous ne pouvez pas publier un commentaire'
+          }))
+  }
+}
+
 //AFFICHER UN COMMENTAIRE
 exports.getOneComment = (req,res, next) => {
     Comment.findOne({
