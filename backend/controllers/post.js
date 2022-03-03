@@ -38,7 +38,7 @@ exports.createPost = (req, res, next) => {
             }))
     } else {
         Post.create({
-                id: req.body.id,
+                userId: req.auth.userId,
                 content: req.body.content,
                 status: req.body.status,
                 imageUrl: null,
@@ -68,7 +68,7 @@ exports.deletePost = (req, res, next) => {
       where: {id :req.params.id}
     })
     .then(posts => {
-      if (posts.id !== req.auth.userId) {
+      if (posts.userId !== req.auth.userId) {
         console.log('post.id' + req.auth.userId);
         console.log('posts.id' + posts.id);
           return res.status(403).json({
