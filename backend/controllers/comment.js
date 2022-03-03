@@ -48,7 +48,7 @@ exports.deleteComment = (req, res, next) => {
       where: {id :req.params.id}
     })
     .then(comments => {
-      if (comments.id !== req.auth.userId) {
+      if (comments.userId !== req.auth.userId) {
         console.log('comments.id' + comments.id);
         console.log('req.auth.userId' + req.auth.userId);
           return res.status(403).json({
@@ -76,7 +76,7 @@ exports.deleteComment = (req, res, next) => {
   
       .then((comments) => {
         console.log(comments);
-        if (comments.id !== req.auth.userId) {
+        if (comments.userId !== req.auth.userId) {
         //   console.log(posts.id);
         //   console.log(req.auth.userId);
           return res.status(403).json({
