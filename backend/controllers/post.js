@@ -24,7 +24,7 @@ exports.createPost = (req, res, next) => {
     }
     if (req.file) {
         Post.create({
-                id: req.body.id,
+                userId: req.body.userId,
                 content: req.body.content,
                 status: req.body.status,
                 imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
@@ -68,7 +68,7 @@ exports.deletePost = (req, res, next) => {
       where: {id :req.params.id}
     })
     .then(posts => {
-      if (posts.userId !== req.auth.userId) {
+      if (posts.use !== req.auth.userId) {
         console.log('post.id' + req.auth.userId);
         console.log('posts.id' + posts.id);
           return res.status(403).json({
