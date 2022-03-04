@@ -1,19 +1,14 @@
 <template>
 <NavU/>
-
+<h1>MON PROFILE</h1>
 </template>
 <script>
 import NavU from '../components/NavU';
-
 export default {
-  name: "PostView",
+
+  name: "ProfileView",
   components: {
     NavU,
   },
-  data() {
-    return {
-    //   userId: localStorage.getItem("userId"),
-    };
-  },
-};
+}
 </script>

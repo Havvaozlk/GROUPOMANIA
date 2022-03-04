@@ -7,7 +7,7 @@
 <input v-model="dataSignup.lastName" type='text' id='lastName' placeholder='Nom'/>
 <input v-model="dataSignup.email" type='email' id='mail' placeholder='Adresse email'/>
 <input v-model="dataSignup.password" type='password' id='passwordSignup' placeholder='Mot de passe'/>
-<button @click.prevent="signu" type='submit'>S'INSCRIRE</button>
+<button @click.prevent="signup" type='submit'>S'INSCRIRE</button>
 </form>
 </div>
 </template>
