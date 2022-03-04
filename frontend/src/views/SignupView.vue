@@ -1,30 +1,19 @@
-<!-- <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="WELCOME" />
-  </div>
-</template> -->
-
-
 <template>
 <div class='home'>
 <img alt='Groupomania logo' src="../assets/icon-above-font.png" />
 <p> Avec Groupomania, partagez et rester en contact avec vos collègues. </p>
- <LoginUser msg="WELCOME" />
+<form id="form">
+
+</form>
 </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import LoginUser from "@/components/Login.vue";
-
 export default {
-  name: "HomeView",
-  components: {
-    LoginUser,
-  },
+  name: "SignupView",
 };
 </script>
+
 <style>
 .home {
 align-items: center
@@ -38,4 +27,14 @@ margin-top: 0;
     font-size: 1.5rem;
     font-family: inherit;
 }
+
+#form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 2rem 0 2rem 0;
+    border: solid 0.5px;
+    box-shadow: 1px 1px 1px grey;
+    }
 </style>
