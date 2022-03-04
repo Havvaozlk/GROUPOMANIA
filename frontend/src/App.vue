@@ -14,6 +14,7 @@
     text-align: center;
     justify-content: center;
     margin: 0;
+    background: rgb(250,250,250)
 }
 
 nav {
