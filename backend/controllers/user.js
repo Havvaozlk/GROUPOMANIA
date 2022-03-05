@@ -24,10 +24,7 @@ schema
 //fonction inscription
 exports.signup = (req, res, next) => {
   if (!emailValidator.validate(req.body.email) || (!schema.validate(req.body.password))) {  
-    // throw { error: " invalide !" }  
-    {
-      return res.status(400).json({error: 'Mot de passe trop faible.\n Veuillez saisir: 1 majuscule, 1 minuscule, 1 chiffres, 8 caractères minimum sans espaces'})
-    }
+    throw { error: " invalide !" }  
   } else if (emailValidator.validate(req.body.email) && (schema.validate(req.body.password))) 
     //on hash le mot de passe avec bcrypt, on lui passe le mot de passe et le nombre de tour que l'algorithme va faire
     bcrypt.hash(req.body.password, 10)
@@ -69,10 +66,10 @@ exports.login = (req, res, next) => {
         bcrypt.compare(req.body.password, users.password)
           .then(valid => {
             //si elle n'est pas valable 
-            if (valid) {
+            if (!valid) {
               console.log(req.body.password);
               console.log(users.password);
-              return res.status(401).json({ error: 'Mot de passe incorrect !' });
+              return res.status(401).json({ error: 'Email ou mot de passe incorrect !' });
             } else {
             //si elle est valable on envoie un objet json avec le userId et token
             res.status(200).json({
