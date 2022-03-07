@@ -10,6 +10,7 @@ const passwordValidator = require('password-validator');
 //qui permettent aux utilisateurs de ne se connecter qu'une seule fois à leur compte 
 const jwt = require('jsonwebtoken');
 const emailValidator = require('email-validator');
+const user = require('../models/user');
 
 var schema = new passwordValidator();
 schema
@@ -52,7 +53,42 @@ exports.signup = (req, res, next) => {
                 .catch(error => res.status(500).json({ error }));
           }
 
-//fonction pour se connecter a un compte existant
+// //fonction pour se connecter a un compte existant
+// exports.login = (req, res, next) => {
+//   //on trouve l'utilisateur de la base de donnée
+//   models.users.findOne({ where: {email: req.body.email} })
+//     .then(users => {
+//       //si on ne trouve pas l'utilisateur
+//       if (!users) {
+//         return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+//       }
+//       //si l'utilisateur a été trouvé on compare les mot de passes
+//       bcrypt.compare(typeof(req.body.password), typeof(users.password))
+//         .then(valid => {
+//           //si elle n'est pas valable 
+//           if (!valid) {
+//             console.log(req.body.password);
+//             console.log(users.password);
+//             return res.status(401).json({ error: 'Mot de passe incorrect !' });
+//           }
+//           //si elle est valable on envoie un objet json avec le userId et token
+//           res.status(200).json({
+//               userId: users.id,
+//               //on appel la fonction sign de jwt pour encoder un nouveau token
+//               token: jwt.sign(
+//                 //on y ajoute l'id de l'utilisateur
+//                 { userId: users.id },
+//                 //on ajoute une chaine secrète de développement temporaire
+//                 'RANDOM_TOKEN_SECRET',
+//                 //nous définissons ensuite la fin de validité du token à 24H
+//                 { expiresIn: '24h' }
+//               )
+//             });
+//         })
+//         .catch(error => res.status(500).json({ error }));
+//     })
+//     .catch(error => res.status(500).json({ error }));
+// };
 exports.login = (req, res, next) => {
     models.users.findOne({ 
          where: {email: req.body.email}
@@ -64,13 +100,13 @@ exports.login = (req, res, next) => {
         }
         //si l'utilisateur a été trouvé on compare les mot de passes
         bcrypt.compare(req.body.password, users.password)
-          .then(valid => {
+          .then((valid) => {
             //si elle n'est pas valable 
-            if (!valid) {
+            if (valid) {
               console.log(req.body.password);
               console.log(users.password);
               return res.status(401).json({ error: 'Email ou mot de passe incorrect !' });
-            } else {
+            } 
             //si elle est valable on envoie un objet json avec le userId et token
             res.status(200).json({
                 userId: users.id,
@@ -84,7 +120,7 @@ exports.login = (req, res, next) => {
                   //nous définissons ensuite la fin de validité du token à 24H
                   { expiresIn: '24h' }
                 )
-              })}
+              })
           })
           .catch(error => res.status(500).json({ error }));
       })

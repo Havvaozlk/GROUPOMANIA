@@ -1,13 +1,17 @@
 <template>
 <div class='home'>
 <img alt='Groupomania logo' src="../assets/icon-above-font.png" />
-<p> Avec Groupomania, partagez et rester en contact avec vos collègues. </p>
+<p class="NavP"> Avec Groupomania, partagez et rester en contact avec vos collègues. </p>
 <form id="form" @submit.prevent="signup()">
 <input  v-model="dataSignup.firstName" type='text' id='firstName' placeholder='Prénom'/>
 <input v-model="dataSignup.lastName" type='text' id='lastName' placeholder='Nom'/>
 <input v-model="dataSignup.email" type='email' id='mail' placeholder='Adresse email'/>
 <input v-model="dataSignup.password" type='password' id='passwordSignup' placeholder='Mot de passe'/>
+<p v-if="error" class="ErrorMessage"> {{error}}</p>
 <button @click.prevent="signup" type='submit'>S'INSCRIRE</button>
+<p class="infoPassword"> L'adresse mail doit être unique et le mot de passe doit comporter minimum 8 caractères avec au moins un chiffre, une majuscule, une minuscule sans espaces.</p>
+<!--<router-link to="/login" role="button">Vous avez déjà un compte ?<router-link>-->
+<router-link to="/login" role='button' class='loginButton'>Vous avez déjà un compte ?</router-link>
 </form>
 </div>
 </template>
@@ -24,12 +28,17 @@ export default {
           firstName: "",
           lastName: "",
           email:"",
-          password:""
-          } 
+          password:"",
+          } ,
+          error:"",
+          
       };
   },
   methods: {
       signup() {
+        if (
+          this.firstName != "" && this.lastName != "" && this.email != "" && this.password != "") {
+
           axios
           .post("http://localhost:8000/api/user/signup", this.dataSignup)
           .then((res) => {
@@ -40,10 +49,12 @@ export default {
           this.$router.push("/post");
           })
           .catch(() => {
-          (this.error = "email ou mot de passe incorrecte")
+          (this.error = "Veuillez remplir tout les champs de saisie.")
           })     
+          } else {
+            (this.error = "Error")
           }
-  }
+  }}
 };
 </script>
 
@@ -55,7 +66,7 @@ align-items: center
 .home img {
 width: 40%
 }
-.home p {
+.NavP {
 margin-top: 0;
     font-size: 1.5rem;
     font-family: inherit;
@@ -87,5 +98,11 @@ button {
     background-color: forestgreen;
     border: 0px;
     text-decoration: none;
+    cursor: pointer;
+}
+
+.infoPassword {
+      color: #f02849;
+    font-size: small;
 }
 </style>

@@ -1,10 +1,11 @@
 <template>
 <div class='home'>
 <img alt='Groupomania logo' src="../assets/icon-above-font.png" />
-<p> Avec Groupomania, partagez et rester en contact avec vos collègues. </p>
+<p class="NavP"> Avec Groupomania, partagez et rester en contact avec vos collègues. </p>
 <form id="form" @submit.prevent="login()" method='post'>
 <input v-model="dataLogin.email" type='email' id='email' placeholder='Adresse email'>
 <input v-model="dataLogin.password" type='password' id='password' placeholder='Mot de passe'>
+<p v-if="error" class="ErrorMessage"> {{error}}</p>
 <input @click.prevent="login" type='submit' value='SE CONNECTER'>
 <a href='#'>Mot de passe oublié ? </a>
 <div class='signup'>
@@ -27,7 +28,8 @@ export default {
           dataLogin: {
           email: "",
           password: "",
-          } 
+          },
+           error: "", 
       };
   },
   methods: {
@@ -42,7 +44,7 @@ export default {
           this.$router.push("/post");
           })
           .catch(() => {
-          (this.error = "email ou mot de passe incorrecte")
+          (this.error = "L'adresse ou le mot de passe que vous avez saisie est incorrecte.")
           })     
           }
   }
@@ -57,7 +59,7 @@ align-items: center
 .home img {
 width: 40%
 }
-.home p {
+.NavP {
 margin-top: 0;
     font-size: 1.5rem;
     font-family: inherit;
@@ -122,5 +124,11 @@ padding: 0.7rem 2rem;
     border: 0px;
     text-decoration: none;
     }
+
+.ErrorMessage {
+
+ color: #f02849;
+    font-size: small;
+}
 
 </style>
