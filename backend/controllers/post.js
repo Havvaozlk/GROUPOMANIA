@@ -16,15 +16,16 @@ exports.getOnePost = (req,res, next) => {
 
 // CREER UN POST
 exports.createPost = (req, res, next) => {
-    if (!req.body.content) {
-        res.status(400).send({
-            message: "impossible de publier un message vide !"
-        });
-        return
-    }
+    // if (!req.body.content) {
+    //   console.log(req.body.imageUrl);
+    //     res.status(400).send({
+    //         message: "impossible de publier un message vide !"
+    //     });
+    //     return
+    // }
     if (req.file) {
         Post.create({
-                userId: req.body.userId,
+                userId: req.auth.userId,
                 content: req.body.content,
                 status: req.body.status,
                 imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,

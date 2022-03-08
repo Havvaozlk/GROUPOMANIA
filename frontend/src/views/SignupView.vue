@@ -9,8 +9,6 @@
 <input v-model="dataSignup.password" type='password' id='passwordSignup' placeholder='Mot de passe'/>
 <p v-if="error" class="ErrorMessage"> {{error}}</p>
 <button @click.prevent="signup" type='submit'>S'INSCRIRE</button>
-<p class="infoPassword"> L'adresse mail doit être unique et le mot de passe doit comporter minimum 8 caractères avec au moins un chiffre, une majuscule, une minuscule sans espaces.</p>
-<!--<router-link to="/login" role="button">Vous avez déjà un compte ?<router-link>-->
 <router-link to="/login" role='button' class='loginButton'>Vous avez déjà un compte ?</router-link>
 </form>
 </div>
@@ -36,11 +34,23 @@ export default {
   },
   methods: {
       signup() {
-        if (
-          this.firstName != "" && this.lastName != "" && this.email != "" && this.password != "") {
+        // if (
+        //  this.firstName == "" || this.firstName== null ||
+        // this.lastName == "" || this.lastName == null ||
+        // this.email == "" || this.email == null ||
+        // this.password == "" || this.password == null) {
+        //   return this.error= "Veuillez remplir tout les champs de saisie."
+        // }
+        
+        //  else {
 
           axios
-          .post("http://localhost:8000/api/user/signup", this.dataSignup)
+          .post("http://localhost:8000/api/user/signup", {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById("lastName").value,
+            email: document.getElementById("mail").value,
+            password: document.getElementById("passwordSignup").value
+          })
           .then((res) => {
         localStorage.setItem("token", res.data.token);
           localStorage.setItem("userId", res.data.userId);
@@ -49,11 +59,9 @@ export default {
           this.$router.push("/post");
           })
           .catch(() => {
-          (this.error = "Veuillez remplir tout les champs de saisie.")
+          this.error = "L'adresse mail doit être unique et le mot de passe doit comporter minimum 8 caractères avec au moins un chiffre, une majuscule, une minuscule sans espaces."
           })     
-          } else {
-            (this.error = "Error")
-          }
+          // }
   }}
 };
 </script>
@@ -82,7 +90,7 @@ margin-top: 0;
     box-shadow: 1px 1px 1px grey;
     }
 
-input  {
+#fistName #lastName #mail #passwordSignup   {
     width: 40%;
     margin-bottom: 1rem;
     padding-left: 1rem;
@@ -104,5 +112,12 @@ button {
 .infoPassword {
       color: #f02849;
     font-size: small;
+}
+
+#file {
+    border: solid 1px black;
+    color: black;
+    padding: 0.5rem;
+    width: 50%;
 }
 </style>

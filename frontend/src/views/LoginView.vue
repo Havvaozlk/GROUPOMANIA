@@ -16,8 +16,6 @@
 </template>
 
 <script>
-// @ is an alias to /src
-//import LoginUser from "@/components/Login.vue";
 import axios from "axios";
 
 export default {
@@ -44,7 +42,7 @@ export default {
           this.$router.push("/post");
           })
           .catch(() => {
-          (this.error = "L'adresse ou le mot de passe que vous avez saisie est incorrecte.")
+          (this.error = "L'adresse ou le mot de passe que vous avez saisie est incorrecte")
           })     
           }
   }

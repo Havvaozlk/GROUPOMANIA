@@ -24,9 +24,16 @@ schema
 
 //fonction inscription
 exports.signup = (req, res, next) => {
-  if (!emailValidator.validate(req.body.email) || (!schema.validate(req.body.password))) {  
-    throw { error: " invalide !" }  
-  } else if (emailValidator.validate(req.body.email) && (schema.validate(req.body.password))) 
+  if(req.body.email == null || req.body.email == '' || req.body.firstName == null || req.body.firstName == ''|| req.body.password == null || req.body.password == '' || req.body.lastName == null || req.body.lastName == '') {
+    return res.status(400).json({ error: 'Tous les champs doivent être renseignés' });
+}
+if (!emailValidator.validate(req.body.email)) {
+  return res.status(400).json({error: "Adresse mail invalide"})
+}
+  if (!schema.validate(req.body.password))  {  
+    return res.status(400).json({error: "erreur mot de passe"}) 
+  } else {
+  // if (emailValidator.validate(req.body.email) && (schema.validate(req.body.password))) 
     //on hash le mot de passe avec bcrypt, on lui passe le mot de passe et le nombre de tour que l'algorithme va faire
     bcrypt.hash(req.body.password, 10)
         //on récupere le hash de mdp
@@ -51,44 +58,9 @@ exports.signup = (req, res, next) => {
                 }));
             })
                 .catch(error => res.status(500).json({ error }));
-          }
+          }}
 
-// //fonction pour se connecter a un compte existant
-// exports.login = (req, res, next) => {
-//   //on trouve l'utilisateur de la base de donnée
-//   models.users.findOne({ where: {email: req.body.email} })
-//     .then(users => {
-//       //si on ne trouve pas l'utilisateur
-//       if (!users) {
-//         return res.status(401).json({ error: 'Utilisateur non trouvé !' });
-//       }
-//       //si l'utilisateur a été trouvé on compare les mot de passes
-//       bcrypt.compare(typeof(req.body.password), typeof(users.password))
-//         .then(valid => {
-//           //si elle n'est pas valable 
-//           if (!valid) {
-//             console.log(req.body.password);
-//             console.log(users.password);
-//             return res.status(401).json({ error: 'Mot de passe incorrect !' });
-//           }
-//           //si elle est valable on envoie un objet json avec le userId et token
-//           res.status(200).json({
-//               userId: users.id,
-//               //on appel la fonction sign de jwt pour encoder un nouveau token
-//               token: jwt.sign(
-//                 //on y ajoute l'id de l'utilisateur
-//                 { userId: users.id },
-//                 //on ajoute une chaine secrète de développement temporaire
-//                 'RANDOM_TOKEN_SECRET',
-//                 //nous définissons ensuite la fin de validité du token à 24H
-//                 { expiresIn: '24h' }
-//               )
-//             });
-//         })
-//         .catch(error => res.status(500).json({ error }));
-//     })
-//     .catch(error => res.status(500).json({ error }));
-// };
+ //fonction pour se connecter a un compte existant
 exports.login = (req, res, next) => {
     models.users.findOne({ 
          where: {email: req.body.email}
@@ -102,7 +74,7 @@ exports.login = (req, res, next) => {
         bcrypt.compare(req.body.password, users.password)
           .then((valid) => {
             //si elle n'est pas valable 
-            if (valid) {
+            if (!valid) {
               console.log(req.body.password);
               console.log(users.password);
               return res.status(401).json({ error: 'Email ou mot de passe incorrect !' });
