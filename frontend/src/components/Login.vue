@@ -5,7 +5,7 @@
 <input type='submit' value='SE CONNECTER'>
 <a href='#'>Mot de passe oublié ? </a>
 <div class='signup'>
-<button type='button'>CREER UN COMPTE</button>
+<button type='button' class='buttonToSignup'>CREER UN COMPTE</button>
 </div>
 </form>
 </template>
@@ -69,7 +69,7 @@ a {
     padding-top: 2rem;
     }
 
-button {
+.buttonToSignup {
 padding: 0.7rem 2rem;
     border-radius: 6px;
     color: white;

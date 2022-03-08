@@ -8,7 +8,7 @@
 <input v-model="dataSignup.email" type='email' id='mail' placeholder='Adresse email'/>
 <input v-model="dataSignup.password" type='password' id='passwordSignup' placeholder='Mot de passe'/>
 <p v-if="error" class="ErrorMessage"> {{error}}</p>
-<button @click.prevent="signup" type='submit'>S'INSCRIRE</button>
+<button @click.prevent="signup" type='submit' class='buttonSignup'>S'INSCRIRE</button>
 <router-link to="/login" role='button' class='loginButton'>Vous avez déjà un compte ?</router-link>
 </form>
 </div>
@@ -99,7 +99,7 @@ margin-top: 0;
     border: 0.5px solid 
 }
 
-button {
+.buttonSignup {
   padding: 0.7rem 2rem;
     border-radius: 6px;
     color: white;

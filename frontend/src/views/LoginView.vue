@@ -7,7 +7,7 @@
 <input v-model="dataLogin.password" type='password' id='password' placeholder='Mot de passe'>
 <p v-if="error" class="ErrorMessage"> {{error}}</p>
 <input @click.prevent="login" type='submit' value='SE CONNECTER'>
-<a href='#'>Mot de passe oublié ? </a>
+<a href='#' id="forgetPassword">Mot de passe oublié ? </a>
 <div class='signup'>
 <router-link to="/signup" role='button' class='signupButton'>CREER UN COMPTE</router-link>
 </div>
@@ -102,7 +102,7 @@ width: 40%;
     cursor: pointer
 }
 
-a {
+#forgetPassword {
     color: dodgerblue;
     font-size: small;
     margin-bottom: 1rem;
