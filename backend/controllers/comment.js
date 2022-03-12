@@ -1,29 +1,31 @@
 const models =require('../models/index');
 const Comment= models.comments;
+const Post=models.posts;
 const jwt = require('jsonwebtoken');
 const auth = require('../middleware/auth');
 const db = require('../config/db');
 
 // CREER UN COMMENTAIRE
-exports.createComment = (req, res, next) => {
-  if (!req.body.content) {
-      res.status(400).send({
-          message: "impossible de publier un commentaire vide !"
-      });
-      return
-  } else {
-      Comment.create({
-              userId: req.auth.userId,
+exports.createComment = (req, res, next) => {    
+  
+  Post.findOne({
+      where: { id: req.params.postId }
+  })
+  .then(commentedPost=> {
+      if(commentedPost) {
+          const comment = Comment.build({
               content: req.body.content,
+              postId: commentedPost.id,
+              userId: req.auth.userId
           })
-          .then(() => res.status(201).json({
-              message: 'Commentaire créé !'
-          }))
-          .catch((error) => res.status(400).json({
-              error,
-              message: 'Vous ne pouvez pas publier un commentaire'
-          }))
-  }
+          comment.save()
+              .then(() => res.status(201).json({ message: 'Commentaire crée !' }))
+              .catch(error => res.status(400).json({ error: 'Erreur' }));
+      } else {
+          return res.status(404).json({ error: "Le post n'a pas été trouvé"})
+      }
+  })
+  .catch(error => res.status(500).json({ error: 'Erreur' }));
 }
 
 //AFFICHER UN COMMENTAIRE

@@ -55,6 +55,8 @@ export default {
         localStorage.setItem("token", res.data.token);
           localStorage.setItem("userId", res.data.userId);
           localStorage.setItem("admin", res.data.admin);
+          localStorage.setItem('firstName', res.data.firstName);
+          localStorage.setItem('lastName', res.data.lastName);
 
           this.$router.push("/post");
           })

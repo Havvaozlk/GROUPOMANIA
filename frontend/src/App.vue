@@ -14,7 +14,7 @@
     text-align: center;
     justify-content: center;
     margin: 0;
-    background: rgb(250,250,250)
+    background: #f0f2f5;
 }
 
 nav {

@@ -36,7 +36,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/api/user', userRoutes);
 app.use('/api/post', postRoutes);
 app.use('/api/comment', commentRoutes);
-app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 

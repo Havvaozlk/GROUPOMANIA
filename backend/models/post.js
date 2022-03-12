@@ -1,3 +1,4 @@
+const { post } = require("../routes/user");
 
 
 module.exports = (sequelize, Sequelize) => {
@@ -24,5 +25,13 @@ module.exports = (sequelize, Sequelize) => {
         sequelize,
         modelName: 'Post',
     });
+
+    Post.associate = function (models) {
+      post.belongsTo(models.User, {
+        foreignKey: 'userId',
+        as:'user',
+        onDelete:'CASCADE',
+      })
+    }
     return Post;
   };

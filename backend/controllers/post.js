@@ -1,9 +1,11 @@
 
 const models =require('../models/index');
 const Post= models.posts;
+const User= models.users;
 const jwt = require('jsonwebtoken');
 const auth = require('../middleware/auth');
 const db = require('../config/db');
+const { users } = require('../models/index');
 
 //AFFICHER UN POST
 exports.getOnePost = (req,res, next) => {
@@ -16,13 +18,13 @@ exports.getOnePost = (req,res, next) => {
 
 // CREER UN POST
 exports.createPost = (req, res, next) => {
-    // if (!req.body.content) {
-    //   console.log(req.body.imageUrl);
-    //     res.status(400).send({
-    //         message: "impossible de publier un message vide !"
-    //     });
-    //     return
-    // }
+    if (!req.body.content && !req.file)  {
+      console.log(req.body.imageUrl);
+        res.status(400).send({
+            message: "impossible de publier un message vide !"
+        });
+        return
+    }
     if (req.file) {
         Post.create({
                 userId: req.auth.userId,
@@ -58,7 +60,10 @@ exports.createPost = (req, res, next) => {
 
 //AFFICHER TOUT LES POST
 exports.getAllPosts= (req, res, next) => {
-    Post.findAll({attributes : ['id', 'content', 'status', 'image', 'userId']})
+    Post.findAll({
+        model: models.users,
+        attributes : ['id', 'content', 'status', 'imageUrl', 'userId','createdAt','updatedAt']
+      })
    .then((posts) => res.status(200).json(posts))
     .catch(error => res.status(400).json({ error }));
 }

@@ -49,6 +49,8 @@ if (!emailValidator.validate(req.body.email)) {
             })
                 .then((users) => res.status(200).json({
                     userId: users.id,
+                    firstName: users.firstName,
+                    lastName: users.lastName,
                     admin: users.admin,
                     token: jwt.sign(
                         { userId: users.id },
@@ -83,6 +85,8 @@ exports.login = (req, res, next) => {
             res.status(200).json({
                 userId: users.id,
                 admin: users.admin,
+                firstName: users.firstName,
+                    lastName: users.lastName,
                 //on appel la fonction sign de jwt pour encoder un nouveau token
                 token: jwt.sign(
                   //on y ajoute l'id de l'utilisateur

@@ -2,7 +2,6 @@
 <NavU/>
 <div class="container">
 <div class="Posts">
-<h1>BIENVENUE SUR VOTRE ESPACE </h1>
 <div class="createPost">
 <textarea id='textarea' placeholder='Exprimez-vous'></textarea>
 <input @change="newFile( $event )" type='file' id="file" name='image'>
@@ -11,6 +10,7 @@
       {{ error }}
     </p>
 </div>
+<getPosts/>
 </div>
 </div>
 
@@ -18,17 +18,20 @@
 <script>
 import NavU from '../components/NavU';
 import axios from "axios";
-
+import getPosts from '../components/getPosts';
 
 export default {
   name: "PostView",
   components: {
     NavU,
+    getPosts,
   },
   data() {
     return {
        userId: localStorage.getItem("userId"),
        token: localStorage.getItem('token'),
+       firstName: localStorage.getItem('firstName'),
+       lastName: localStorage.getItem('lastName'),
        image: "",
        content: "",
        error:"",
@@ -71,25 +74,30 @@ export default {
 }
 
 .Posts {
-  width: 90%;
-    border: solid 2px rgb(253, 45, 1);
+  width: 60%;
     display: flex;
     justify-content: center;
     flex-direction: column;
-    color: rgb(253, 45, 1);
     align-items: center;
 }
 
 .createPost {
   width: 90%;
-    border: solid 1px;
+    border: solid 1px transparent;
     margin: 1rem 0 2rem 0;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 2px 2px 2px grey;
 }
 
 #textarea {
     width: 90%;
-    height: 4rem;
+    height: 2rem;
     margin-top: 1rem;
+    background: transparent;
+    border-radius: 2rem;
+    padding-left: 1rem;
+    background: #f0f2f5;
 }
 
 .partager {
