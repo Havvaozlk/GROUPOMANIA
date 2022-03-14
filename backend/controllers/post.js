@@ -4,8 +4,8 @@ const Post= models.posts;
 const User= models.users;
 const jwt = require('jsonwebtoken');
 const auth = require('../middleware/auth');
-const db = require('../config/db');
 const { users } = require('../models/index');
+
 
 //AFFICHER UN POST
 exports.getOnePost = (req,res, next) => {
@@ -60,10 +60,7 @@ exports.createPost = (req, res, next) => {
 
 //AFFICHER TOUT LES POST
 exports.getAllPosts= (req, res, next) => {
-    Post.findAll({
-        model: models.users,
-        attributes : ['id', 'content', 'status', 'imageUrl', 'userId','createdAt','updatedAt']
-      })
+    Post.findAll()
    .then((posts) => res.status(200).json(posts))
     .catch(error => res.status(400).json({ error }));
 }

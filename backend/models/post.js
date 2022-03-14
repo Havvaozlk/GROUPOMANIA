@@ -1,3 +1,5 @@
+
+
 const { post } = require("../routes/user");
 
 
@@ -27,9 +29,9 @@ module.exports = (sequelize, Sequelize) => {
     });
 
     Post.associate = function (models) {
-      post.belongsTo(models.User, {
+      post.belongsTo(models.users, {
         foreignKey: 'userId',
-        as:'user',
+        as:'users',
         onDelete:'CASCADE',
       })
     }

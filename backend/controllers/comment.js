@@ -39,7 +39,7 @@ exports.getOneComment = (req,res, next) => {
 
   //AFFICHER TOUT LES COMMENTAIRES
 exports.getAllComments= (req, res, next) => {
-    Comment.findAll({attributes : ['id', 'content']})
+    Comment.findAll()
    .then((comments) => res.status(200).json(comments))
     .catch(error => res.status(400).json({ error }));
 }

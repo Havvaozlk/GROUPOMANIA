@@ -22,6 +22,23 @@
                 <button type="button" class="updateButton">MODIFIER </button>
                 <button type="button" @click="deletePost(post.id)" class="deleteButton">SUPPRIMER </button>
           </div>
+          <div class="getAllComments">
+           <div v-for="comment in comments.filter((comment) => {
+              return comment.postId == post.id;
+            })" :key="comment.id" class="commentsList">
+           <div class="userComment">
+           <div class="divImage">
+<img src="../avatar1.png" class="avatarComment"/>
+           </div>
+           <div class="divUserContentDate">
+           <div class="divUserContent">
+<h3 class="usernameComment">Nom prénom</h3>
+          <p>{{comment.content}}</p>
+           </div>
+<p class="dateComment"> Publié le {{ dateFormat(comment.createdAt) }} </p>
+           </div>
+           </div>
+           </div>
           <div class="divComment">
           <textarea v-model="content" type="text" id="comment" placeholder="Ecrire un commentaire.."></textarea>
           <button @click="sendComment(post.id)" type="text" class='sendComment'>COMMENTER</button>
@@ -29,7 +46,8 @@
       {{ error }}
     </p>
           </div>
-      </div>   
+      </div> 
+      </div>  
 </template>
 
 <script>
@@ -47,11 +65,12 @@ export default {
             admin: "",
             posts: [],
             content:"",
-            comments:"",
+            comment:"",
+            comments:[],
             error:""
         }
     },
-    mounted() {
+    created() {
         this.userId = JSON.parse(localStorage.getItem("userId"));
         this.admin = JSON.parse(localStorage.getItem("admin"));
         console.log(localStorage);
@@ -73,7 +92,25 @@ export default {
 
             })
             .catch(error => console.log(error))
+    
+                let urlComments = "http://localhost:8000/api/comment";
+        let optionsComments = {
+            method: "GET",
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("token"),
+            }
+        };
+        fetch(urlComments, optionsComments)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                this.comments = data;
+                console.log(this.comments)
+
+            })
+            .catch(error => console.log(error))
     },
+    
     methods: {
         dateFormat(date){
                 if (date) {
@@ -111,7 +148,7 @@ export default {
                 })
                 .catch(error => console.log(error))
                 
-            },
+            },         
           
 }
 }
@@ -167,7 +204,6 @@ export default {
 
 .DeleteComment {
         padding: 0.5rem 0 0.5rem 0;
-    border-top: solid 0.5px lightgrey;
     border-bottom: solid 0.5px lightgrey;
     margin-bottom: 1rem;
 }
@@ -223,5 +259,48 @@ export default {
     border-radius: 0.5rem;
     margin-right: 0.5rem;
 }
+
+.contentPost {
+    border-bottom: solid lightgrey 1px;
+}
+
+.userComment {
+    display:flex;
+}
+
+.avatarComment {
+    width: 29px;
+}
+
+.divUserContent {
+    padding: 0.5rem 1rem 1rem 1rem;
+    border-radius: 0.5rem;
+    background: #f0f2f5;
+}
+
+.usernameComment {
+    margin: 2px 0 4px 0;
+    font-size: unset;
+}
+
+.divUserContent p {
+    margin: 0 0 0 -5px;
+}
+
+.divImage {
+    margin-right: 1rem;
+}
+
+.dateComment {
+    margin: 0.2rem 0 1rem 0;
+    text-align: start;
+    color: grey;
+    font-size: smaller;
+}
+
+.getAllComments {
+    margin-top: 1rem;
+}
+
 
 </style>
