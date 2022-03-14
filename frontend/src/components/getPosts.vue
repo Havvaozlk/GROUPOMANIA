@@ -38,7 +38,7 @@
            </div>
 <p class="dateComment"> Publié le {{ dateFormat(comment.createdAt) }} </p>
            </div>
-           <div v-if="post.userId == userId || admin == true" class="deleteComment">
+           <div v-if="comment.userId == userId || admin == true" class="deleteComment">
            <button @click="deleteComment(comment.id)" type="text" class="deleteComment">Supprimer X</button>
            </div>
            </div>
