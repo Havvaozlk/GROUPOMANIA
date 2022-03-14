@@ -18,7 +18,7 @@
           <img class="contentImg" :src="post.imageUrl" alt="image publiée"/>
           </div>
           </div>  
-          <div v-if="post.userId == userId || admin == true" class="DeleteComment">
+          <div v-if="post.userId == userId || admin == true" class="DeletePost">
                 <button type="button" class="updateButton">MODIFIER </button>
                 <button type="button" @click="deletePost(post.id)" class="deleteButton">SUPPRIMER </button>
           </div>
@@ -26,6 +26,7 @@
            <div v-for="comment in comments.filter((comment) => {
               return comment.postId == post.id;
             })" :key="comment.id" class="commentsList">
+            
            <div class="userComment">
            <div class="divImage">
 <img src="../avatar1.png" class="avatarComment"/>
@@ -36,6 +37,9 @@
           <p>{{comment.content}}</p>
            </div>
 <p class="dateComment"> Publié le {{ dateFormat(comment.createdAt) }} </p>
+           </div>
+           <div v-if="post.userId == userId || admin == true" class="deleteComment">
+           <button @click="deleteComment(comment.id)" type="text" class="deleteComment">Supprimer X</button>
            </div>
            </div>
            </div>
@@ -148,7 +152,20 @@ export default {
                 })
                 .catch(error => console.log(error))
                 
-            },         
+            },     
+            deleteComment(id) {
+                  axios.delete('http://localhost:8000/api/comment/' + id, {
+                    headers: {
+                        'Content-Type' : 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    }
+                })
+                .then((response) => {
+                    console.log(response);
+                    window.location.reload();
+                })
+                .catch(error => console.log(error))  
+            }    
           
 }
 }
@@ -202,7 +219,7 @@ export default {
     height: 0.9rem;
 }
 
-.DeleteComment {
+.DeletePost {
         padding: 0.5rem 0 0.5rem 0;
     border-bottom: solid 0.5px lightgrey;
     margin-bottom: 1rem;
@@ -302,5 +319,11 @@ export default {
     margin-top: 1rem;
 }
 
+.deleteComment {
+        border: none;
+    background: transparent;
+    color: grey;
+    cursor: pointer;
+}
 
 </style>
