@@ -3,7 +3,7 @@
 <div id="bloc">
   <div id="backgroundImg">
     <div id="divImgAvatar">
-      <img src="../avatar.png" />
+      <img src="../avatar.png" alt="avatar utilisateur" />
     </div>
   </div>
   <h1>MES INFORMATIONS </h1>
@@ -175,5 +175,12 @@ export default {
   font-weight: bold;
   background: grey;
   cursor:pointer;
+}
+
+@media screen and (max-width:700px) {
+  #logo {
+    width: 100%;
+  }
+
 }
 </style>

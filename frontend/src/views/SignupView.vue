@@ -75,7 +75,8 @@ align-items: center
 }
 
 .home img {
-width: 40%
+width: 40%;
+height: auto;
 }
 .NavP {
 margin-top: 0;
@@ -98,7 +99,7 @@ margin-top: 0;
   padding: 0.7rem 2rem;
     border-radius: 6px;
     color: white;
-    background-color: forestgreen;
+    background-color: #1b7f1b;
     border: 0px;
     text-decoration: none;
     cursor: pointer;
@@ -126,7 +127,7 @@ width: 40%;
 }
 
 .loginButton {
-  color: dodgerblue;
+  color: #146ec6;
     font-size: small;
     margin-bottom: 1rem;
 }

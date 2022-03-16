@@ -4,7 +4,9 @@
 <div class="Posts">
 <div class="createPost">
 <textarea id='textarea' placeholder='Exprimez-vous'></textarea>
+<label id="idInput">a
 <input @change="newFile( $event )" type='file' id="file" name='image'>
+</label>
 <button @click="newPost" type="text" class='partager'>PARTAGER</button>
 <p v-if="error" id="msgError">
       {{ error }}
@@ -104,10 +106,15 @@ export default {
     padding: 0.7rem 2rem;
     border-radius: 6px;
     color: white;
-    background-color: rgb(253, 45, 1);
+    background-color: rgb(228 43 4);
     border: 0px;
     text-decoration: none;
     cursor: pointer;
     margin: 1rem;
+    font-weight: bold;
+}
+
+#idInput {
+  color:white
 }
 </style>

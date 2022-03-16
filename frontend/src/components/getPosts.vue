@@ -3,7 +3,7 @@
           <div class="blocauthor">
               <div class="user">
               <div class="img">
-              <img src="../avatar1.png" class="avatar"/>
+              <img src="../avatar1.png" class="avatar" alt="avatar"/>
               </div>
               <div id="user">
               <h3 class="username">Nom prénom</h3>
@@ -19,7 +19,6 @@
           </div>
           </div>  
           <div v-if="post.userId == userId || admin == true" class="DeletePost">
-                <button type="button" class="updateButton">MODIFIER </button>
                 <button type="button" @click="deletePost(post.id)" class="deleteButton">SUPPRIMER </button>
           </div>
           <div class="getAllComments">
@@ -29,7 +28,7 @@
             
            <div class="userComment">
            <div class="divImage">
-<img src="../avatar1.png" class="avatarComment"/>
+<img src="../avatar1.png" class="avatarComment" alt="avatar utilisateur"/>
            </div>
            <div class="divUserContentDate">
            <div class="divUserContent">
@@ -44,7 +43,7 @@
            </div>
            </div>
           <div class="divComment">
-          <textarea v-model="content" type="text" id="comment" placeholder="Ecrire un commentaire.."></textarea>
+          <textarea v-model="content" type="text" class="comment" placeholder="Ecrire un commentaire.."></textarea>
           <button @click="sendComment(post.id)" type="text" class='sendComment'>COMMENTER</button>
           <p v-if="error" id="msgError">
       {{ error }}
@@ -194,6 +193,8 @@ export default {
 
 .avatar {
     border-radius: 2rem;
+    width: 100%;
+    height: 100%;
 }
 
 .pcontentPost {
@@ -207,6 +208,7 @@ export default {
 
 .contentImg {
     width: 100%;
+    height: 100%;
 }
 
 .date {
@@ -220,7 +222,6 @@ export default {
 }
 
 .DeletePost {
-        padding: 0.5rem 0 0.5rem 0;
     border-bottom: solid 0.5px lightgrey;
     margin-bottom: 1rem;
 }
@@ -231,6 +232,7 @@ export default {
     color: inherit;
     font-size: inherit;
     cursor:pointer;
+    height:48px;
 }
 
 .updateButton {
@@ -261,7 +263,7 @@ export default {
     display:flex;
 }
 
-#comment {
+.comment {
     border-radius: 1rem;
     margin: 0 1rem 1rem 0.5rem;
     width: 70%;
@@ -287,6 +289,7 @@ export default {
 
 .avatarComment {
     width: 29px;
+    height: auto;
 }
 
 .divUserContent {
@@ -311,7 +314,7 @@ export default {
 .dateComment {
     margin: 0.2rem 0 1rem 0;
     text-align: start;
-    color: grey;
+    color: #777575;
     font-size: smaller;
 }
 
@@ -326,4 +329,14 @@ export default {
     cursor: pointer;
 }
 
+@media screen and (max-width:700px) {
+    .divComment {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .sendComment {
+      width: 50%;
+  }
+}
 </style>
