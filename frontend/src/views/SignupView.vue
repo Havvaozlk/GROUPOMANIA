@@ -3,10 +3,10 @@
 <img alt='Groupomania logo' src="../assets/icon-above-font.png" />
 <p class="NavP"> Avec Groupomania, partagez et rester en contact avec vos collègues. </p>
 <form id="form" @submit.prevent="signup()">
-<input  v-model="dataSignup.firstName" type='text' id='firstName' placeholder='Prénom'/>
-<input v-model="dataSignup.lastName" type='text' id='lastName' placeholder='Nom'/>
-<input v-model="dataSignup.email" type='email' id='mail' placeholder='Adresse email'/>
-<input v-model="dataSignup.password" type='password' id='passwordSignup' placeholder='Mot de passe'/>
+<input  v-model="dataSignup.firstName" type='text' id='firstName' class="signupInput" placeholder='Prénom'/>
+<input v-model="dataSignup.lastName" type='text' id='lastName' class="signupInput" placeholder='Nom'/>
+<input v-model="dataSignup.email" type='email' id='mail' class="signupInput" placeholder='Adresse email'/>
+<input v-model="dataSignup.password" type='password' id='passwordSignup' class="signupInput" placeholder='Mot de passe'/>
 <p v-if="error" class="ErrorMessage"> {{error}}</p>
 <button @click.prevent="signup" type='submit' class='buttonSignup'>S'INSCRIRE</button>
 <router-link to="/login" role='button' class='loginButton'>Vous avez déjà un compte ?</router-link>
@@ -93,14 +93,6 @@ margin-top: 0;
     box-shadow: 1px 1px 1px grey;
     }
 
-#fistName #lastName #mail #passwordSignup   {
-    width: 40%;
-    margin-bottom: 1rem;
-    padding-left: 1rem;
-    height: 2rem;
-    border-radius: 6px;
-    border: 0.5px solid 
-}
 
 .buttonSignup {
   padding: 0.7rem 2rem;
@@ -122,5 +114,20 @@ margin-top: 0;
     color: black;
     padding: 0.5rem;
     width: 50%;
+}
+
+.signupInput {
+width: 40%;
+    margin-bottom: 1rem;
+    padding-left: 1rem;
+    height: 2rem;
+    border-radius: 6px;
+    border: 0.5px solid 
+}
+
+.loginButton {
+  color: dodgerblue;
+    font-size: small;
+    margin-bottom: 1rem;
 }
 </style>

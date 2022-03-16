@@ -41,28 +41,45 @@ export default {
         }
 },
 methods: {
-    updateProfil() {
-        const userId= this.userId;
-        const formData = new FormData();
-                formData.append("firstName", this.firstName);
-                formData.append("lastName", this.lastName);
-                formData.append("email", this.email);
+//     updateProfil() {
+//         const userId= this.userId;
+//         const formData = new FormData();
+//                 formData.append("firstName", this.firstName);
+//                 formData.append("lastName", this.lastName);
+//                 formData.append("email", this.email);
                 
 
-                axios.put('http://localhost:8000/api/user/' + userId , formData, {
-                    headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('token'),
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
-                .then((response) => {
-                    this.firstName = response.data.firstName;
-                    this.lastName = response.data.lastName;
-                    this.email = response.data.email;
-                    console.log("firstName" + this.firstName)
-                })
-                .catch(error => console.log(error))
-                }
+//                 axios.put('http://localhost:8000/api/user/' + userId , formData, {
+//                     headers: {
+//                         'Authorization': 'Bearer ' + localStorage.getItem('token'),
+//                         'Content-Type': 'multipart/form-data'
+//                     }
+//                 })
+//                 .then((response) => {
+//                     this.firstName = response.data.firstName;
+//                     this.lastName = response.data.lastName;
+//                     this.email = response.data.email;
+//                     console.log("firstName" + this.firstName)
+//                 })
+//                 .catch(error => console.log(error))
+//                 }
+// }
+  updateProfil() {
+    const userId= this.userId;
+    axios.put("http://localhost:8000/api/user/" + userId, {
+      firstName: document.getElementById('firstName1').value,
+      lastName: document.getElementById("lastName1").value,
+      email: document.getElementById("email1").value,
+    })
+    .then((res) => {
+      localStorage.setItem('firstName', res.data.firstName);
+          localStorage.setItem('lastName', res.data.lastName);
+          localStorage.setItem('email', res.data.email);
+
+          this.$router.push("/profile");
+    })
+    .catch(error => console.log(error))
+  }
 }
 }
 </script>

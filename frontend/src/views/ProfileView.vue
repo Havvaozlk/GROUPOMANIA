@@ -8,26 +8,26 @@
   </div>
   <h1>MES INFORMATIONS </h1>
   <div id="informations">
-  <div class="typeInfo">
-  <p>NOM</p>
-  <P>PRENOM</p>
-  <p>EMAIL</p>
-  </div>
-  <div id="infoUser">
-  <p class="myLastName infoUser"> {{ lastName }}</p>
-  <p class="myFirstName infoUser"> {{ firstName }}</p>
-  <p class="myEmail infoUser"> {{email}}</p>
-  </div>
-  <!--<button class="buttonModal">MODIFIER</button>-->
-  <div id="divModal" > 
-  <modalProfile :revele="revele" :toggleModale="toggleModale"></modalProfile>
-    <div v-on:click="toggleModale" class="btn btn-success">MODIFIER</div>
+    <div class="typeInfo">
+      <p>NOM</p>
+      <P>PRENOM</p>
+      <p>EMAIL</p>
     </div>
-</div>
-  <div class="deleteAccount">
-  <button @click="deleteAccount" class="deleteAccountButton">SUPPRIMER MON COMPTE</button>
-
-  </div>
+    <div id="infoUser">
+      <p class="myLastName infoUser"> {{ lastName }}</p>
+      <p class="myFirstName infoUser"> {{ firstName }}</p>
+      <p class="myEmail infoUser"> {{email}}</p>
+    </div>
+  <!--<button class="buttonModal">MODIFIER</button>-->
+    <div id="divModal" > 
+  <modalProfile :revele="revele" :toggleModale="toggleModale"></modalProfile>
+        <div v-on:click="toggleModale" class="btn btn-success">MODIFIER</div>
+      </div>
+    </div>
+    <div class="deleteAccount">
+      <button @click="deleteAccount" class="deleteAccountButton">SUPPRIMER MON COMPTE</button>
+      
+    </div>
 </div>
 </template>
 
@@ -51,7 +51,8 @@ export default {
             userId: "",
             email: localStorage.getItem('email'),
             error:"",
-            revele: false
+            revele: false,
+            post:{}
         }
     },
 
