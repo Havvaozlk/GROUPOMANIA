@@ -40,6 +40,7 @@ export default {
           localStorage.setItem("admin", res.data.admin);
           localStorage.setItem('firstName', res.data.firstName);
           localStorage.setItem('lastName', res.data.lastName);
+          localStorage.setItem('email', res.data.email);
 
           this.$router.push("/post");
           })

@@ -87,6 +87,7 @@ exports.login = (req, res, next) => {
                 admin: users.admin,
                 firstName: users.firstName,
                     lastName: users.lastName,
+                    email: users.email,
                 //on appel la fonction sign de jwt pour encoder un nouveau token
                 token: jwt.sign(
                   //on y ajoute l'id de l'utilisateur
