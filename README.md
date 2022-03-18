@@ -33,7 +33,7 @@ Variable DB_PASSWORD: pour spécifier le mot de passe pour se connecter a la bas
 Variable DB_PORT: pour spécifier le port de connexion a la base de donnée.
 
 5. Créer une base de données avec le nom spécifié pour la variable DB_NAME dans le fichier d’environnement.
-6. Importer le fichier db.sql dans le dossier back.
+6. Importer les fichiers groupomania_db_comments.sql, groupomania_db_posts.sql groupomania_db_users.sql dans la base de donnée.
 7. Démarrer le projet avec la commande: npm start
 
 Pour cette version nous avons 4 utilisateurs dans notre base de donnée avec leurs différents commentaires et publications.
