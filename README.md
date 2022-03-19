@@ -33,7 +33,6 @@ BACKEND:
 Variable DB_NAME: pour spécifier le nom de la base de donnée.
 Variable DB_USER: pour spécifier le nom d’utilisateur pour se connecter a la base de donnée.
 Variable DB_PASSWORD: pour spécifier le mot de passe pour se connecter a la base de donnée.
-Variable DB_PORT: pour spécifier le port de connexion a la base de donnée.
 
 5. Créer une base de données avec le nom spécifié pour la variable DB_NAME dans le fichier d’environnement.
 6. Importer les fichiers groupomania_db_comments.sql, groupomania_db_posts.sql groupomania_db_users.sql dans la base de donnée.
