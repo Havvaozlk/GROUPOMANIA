@@ -75,7 +75,7 @@ export default {
           this.$router.push("/");
           })
           .catch(() => {
-          this.error = "L'adresse mail doit être unique et le mot de passe doit comporter minimum 8 caractères avec au moins un chiffre, une majuscule, une minuscule sans espaces."
+          this.error = "Tout les champs doivent être saisie et le mot de passe doit comporter minimum 8 caractères avec au moins un chiffre, une majuscule, une minuscule sans espaces."
           })     
           
       }
