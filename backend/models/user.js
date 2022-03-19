@@ -1,6 +1,11 @@
 
 module.exports = (sequelize, Sequelize) => {
     const User = sequelize.define("user", {
+      id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement :true
+      },
       firstName: {
         type: Sequelize.STRING
       },
@@ -18,16 +23,7 @@ module.exports = (sequelize, Sequelize) => {
           type: Sequelize.BOOLEAN
       }
     },
-    {
-        sequelize,
-        modelName: 'User',
-    });
-    User.associate = function (models) {
-      User.hasMany(models.posts,{
-        foreignKey: 'userId',
-        as: 'posts', 
-      }); 
-    };
+    );
 
     return User;
   };

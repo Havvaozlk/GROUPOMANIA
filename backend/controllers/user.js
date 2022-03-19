@@ -33,7 +33,6 @@ if (!emailValidator.validate(req.body.email)) {
   if (!schema.validate(req.body.password))  {  
     return res.status(400).json({error: "erreur mot de passe"}) 
   } else {
-  // if (emailValidator.validate(req.body.email) && (schema.validate(req.body.password))) 
     //on hash le mot de passe avec bcrypt, on lui passe le mot de passe et le nombre de tour que l'algorithme va faire
     bcrypt.hash(req.body.password, 10)
         //on récupere le hash de mdp
@@ -45,18 +44,10 @@ if (!emailValidator.validate(req.body.email)) {
                 lastName: req.body.lastName,
                 email: req.body.email,
                 password: hash,
-                admin: req.body.admin,
+                admin: false,
             })
                 .then((users) => res.status(200).json({
-                    userId: users.id,
-                    firstName: users.firstName,
-                    lastName: users.lastName,
-                    admin: users.admin,
-                    token: jwt.sign(
-                        { userId: users.id },
-                        'RANDOM_TOKEN_SECRET',
-                        { expiresIn: '24h' }
-                    ),
+                    message: "utilisateur crée !"
                 }));
             })
                 .catch(error => res.status(500).json({ error }));
@@ -91,7 +82,7 @@ exports.login = (req, res, next) => {
                 //on appel la fonction sign de jwt pour encoder un nouveau token
                 token: jwt.sign(
                   //on y ajoute l'id de l'utilisateur
-                  { userId: users.id },
+                  { userId: users.id, admin:users.admin },
                   //on ajoute une chaine secrète de développement temporaire
                   'RANDOM_TOKEN_SECRET',
                   //nous définissons ensuite la fin de validité du token à 24H
@@ -145,33 +136,20 @@ exports.getOneUser = (req,res, next) => {
 
 //modifier son profil
 exports.updateUser = (req, res, next) => {
-  const userObject = req.file ? {
-    ...req.body.users,
-    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-} : {
-    ...req.body
-};
-  models.users.findOne({ where: {id: req.params.id} })
-
-    .then((users) => {
-      console.log(users);
-      if (users.id !== req.auth.userId) {
-        console.log(users.id);
-        console.log(req.auth.userId);
+  models.users.findByPk(req.params.id)
+    .then((oldUser) => {
+      if (oldUser.id !== req.auth.userId) {
         return res.status(403).json({
           error: new Error('Unauthorized request!')
         });
       }
-          models.users.update({ ...userObject }, { where: { id: req.params.id } })
-            .then((users) => res.status(200).json({
+          models.users.update({ ...req.body}, { where: { id: req.params.id } })
+            .then(() => res.status(200).json({
               message: 'Profil modifié !',
               users : {
-                id: users.id,
-                firstName: users.firstName,
-                lastName: users.lastName,
-                email: users.email,
-                password: users.password,
-                admin: users.admin,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                email: req.body.email,
               
               }
             }))
@@ -180,24 +158,3 @@ exports.updateUser = (req, res, next) => {
             }))
           });
 }
-
-// exports.adminDeleteUser = (req, res, next) => {
-//   models.users.findOne ({
-//     where: {id :req.params.id}
-//   })
-//       .then(users => {
-//         if (users.admin !== 1) {
-//           console.log(users.admin);
-//             return res.status(401).json({
-//               error : new Error('Unauthorized request!')
-//             })
-//            } else {
-//             models.users.destroy({where: {id: req.params.id}})
-//             .then((user) => res.status(200).json(user) ({message: 'Compte supprimé !'}))
-//             .catch(error => res.status(400).json({error}));
-               
-//              } })
-//               .catch(error => res.status(500).json({error}))
-//             ;
-//           }
-

@@ -1,56 +1,90 @@
 <template>
-<div v-for="post in posts.slice().reverse()" :key="post.id" class="postList">
-          <div class="blocauthor">
-              <div class="user">
-              <div class="img">
-              <img src="../avatar1.png" class="avatar" alt="avatar"/>
-              </div>
-              <div id="user">
-              <h3 class="username">Nom prénom</h3>
-              <p class="date"> Publié le {{ dateFormat(post.createdAt) }} </p>
-              </div>
-              </div>
+  <div style="display: flex; flex-direction: column; align-items: center">
+    <div v-for="post in posts" :key="post.id" class="postList">
+      <div class="blocauthor">
+        <div class="user">
+          <div class="img">
+            <img src="../avatar1.png" class="avatar" alt="avatar" />
           </div>
-          <div class="contentPost">
-              
-              <p v-if="post.content !== 'null'" class="pcontentPost">  {{ post.content}} </p>
-          <div v-if="post.imageUrl" class="contentPostImg">
-          <img class="contentImg" :src="post.imageUrl" alt="image publiée"/>
+          <div id="user">
+            <h3 class="username">
+              {{post.user.firstName}} {{post.user.lastName}}
+            </h3>
+            <p class="date">Publié le {{ dateFormat(post.createdAt) }}</p>
           </div>
-          </div>  
-          <div v-if="post.userId == userId || admin == true" class="DeletePost">
-                <button type="button" @click="deletePost(post.id)" class="deleteButton">SUPPRIMER </button>
-          </div>
-          <div class="getAllComments">
-           <div v-for="comment in comments.filter((comment) => {
+        </div>
+      </div>
+      <div class="contentPost">
+        <p v-if="post.content !== 'null'" class="pcontentPost">
+          {{ post.content}}
+        </p>
+        <div v-if="post.imageUrl" class="contentPostImg">
+          <img class="contentImg" :src="post.imageUrl" alt="image publiée" />
+        </div>
+      </div>
+      <div v-if="post.userId == userId || admin == true" class="DeletePost">
+        <button type="button" @click="deletePost(post.id)" class="deleteButton">
+          SUPPRIMER
+        </button>
+      </div>
+      <div class="getAllComments">
+        <div
+          v-for="comment in comments.filter((comment) => {
               return comment.postId == post.id;
-            })" :key="comment.id" class="commentsList">
-            
-           <div class="userComment">
-           <div class="divImage">
-<img src="../avatar1.png" class="avatarComment" alt="avatar utilisateur"/>
-           </div>
-           <div class="divUserContentDate">
-           <div class="divUserContent">
-<h3 class="usernameComment">Nom prénom</h3>
-          <p>{{comment.content}}</p>
-           </div>
-<p class="dateComment"> Publié le {{ dateFormat(comment.createdAt) }} </p>
-           </div>
-           <div v-if="comment.userId == userId || admin == true" class="deleteComment">
-           <button @click="deleteComment(comment.id)" type="text" class="deleteComment">Supprimer X</button>
-           </div>
-           </div>
-           </div>
-          <div class="divComment">
-          <textarea v-model="content" type="text" class="comment" placeholder="Ecrire un commentaire.."></textarea>
-          <button @click="sendComment(post.id)" type="text" class='sendComment'>COMMENTER</button>
-          <p v-if="error" id="msgError">
-      {{ error }}
-    </p>
+            })"
+          :key="comment.id"
+          class="commentsList"
+        >
+          <div class="userComment">
+            <div class="divImage">
+              <img
+                src="../avatar1.png"
+                class="avatarComment"
+                alt="avatar utilisateur"
+              />
+            </div>
+            <div class="divUserContentDate">
+              <div class="divUserContent">
+                <h3 class="usernameComment">
+                  {{comment.creatorFirstName}} {{comment.creatorLastName}}
+                </h3>
+                <p>{{comment.content}}</p>
+              </div>
+              <p class="dateComment">
+                Publié le {{ dateFormat(comment.createdAt) }}
+              </p>
+            </div>
+            <div
+              v-if="comment.userId == userId || admin == true"
+              class="deleteComment"
+            >
+              <button
+                @click="deleteComment(comment.id)"
+                type="text"
+                class="deleteComment"
+              >
+                Supprimer X
+              </button>
+            </div>
           </div>
-      </div> 
-      </div>  
+        </div>
+        <div class="divComment">
+          <textarea
+            v-model="content"
+            type="text"
+            class="comment"
+            placeholder="Ecrire un commentaire.."
+          ></textarea>
+          <button @click="sendComment(post.id)" type="text" class="sendComment">
+            COMMENTER
+          </button>
+          <p v-if="error" id="msgError">
+            {{ error }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -61,15 +95,15 @@ export default {
 
     data() {
         return {
-            firstName: localStorage.getItem('firstName'),
+            firstName: "",
             lastName: localStorage.getItem('lastName'),
             status: "",
             userId: "",
             admin: "",
             posts: [],
             content:"",
-            comment:"",
             comments:[],
+            comment: "",
             error:""
         }
     },
@@ -81,45 +115,45 @@ export default {
 
         let url = "http://localhost:8000/api/post";
         let options = {
-            method: "GET",
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem("token"),
             }
         };
-        fetch(url, options)
-            .then(response => response.json())
+        axios.get(url, options)
             .then(data => {
                 console.log(data)
-                this.posts = data;
-                console.log(this.posts)
-
+                this.posts = data.data;
             })
             .catch(error => console.log(error))
-    
+
                 let urlComments = "http://localhost:8000/api/comment";
         let optionsComments = {
-            method: "GET",
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem("token"),
             }
         };
-        fetch(urlComments, optionsComments)
-            .then(response => response.json())
+        axios.get(urlComments, optionsComments)
             .then(data => {
-                console.log(data)
-                this.comments = data;
-                console.log(this.comments)
+                this.comments = data.data;
 
             })
             .catch(error => console.log(error))
     },
-    
+
     methods: {
-        dateFormat(date){
+        pushCurrent(id) {
+            let data = {
+                postId: id,
+                content: "",
+            }
+            this.current.push(data)
+        },
+
+        dateFormat(date){ 
                 if (date) {
                     return moment(String(date)).format('DD/MM/YYYY')
                 }
-            },
+        },
             deletePost (postId) {
                 axios.delete('http://localhost:8000/api/post/' + postId, {
                     headers: {
@@ -127,31 +161,31 @@ export default {
                         'Authorization': 'Bearer ' + localStorage.getItem('token')
                     }
                 })
-                .then((response) => {
-                    console.log(response);
-                    window.location.reload();
+                .then(() => {
+                   window.location.reload()
                 })
-                .catch(error => console.log(error))
 
             },
             sendComment(id) {
                 const postId = id;
 
                 axios.post('http://localhost:8000/api/comment/' + postId, {
-                    
+
                     content: this.content,
+                    creatorFirstName: localStorage.getItem("firstName"),
+                    creatorLastName: localStorage.getItem("lastName"),
                 },{
                     headers: {
                         'Authorization': 'Bearer ' + localStorage.getItem('token')
                     }
                 })
                 .then(() => {
-                    window.location.reload() 
-                    console.log(this.content)                   
+                    window.location.reload()
+                    console.log("content" + this.content)
                 })
                 .catch(error => console.log(error))
-                
-            },     
+
+            },
             deleteComment(id) {
                   axios.delete('http://localhost:8000/api/comment/' + id, {
                     headers: {
@@ -163,14 +197,16 @@ export default {
                     console.log(response);
                     window.location.reload();
                 })
-                .catch(error => console.log(error))  
-            }    
-          
-}
+                .catch(error => console.log(error))
+            }
+
+    }
 }
 </script>
-
 <style>
+.disabled {
+    color: white;
+}
 .postList {
     width: 90%;
     border: solid 1px transparent;
@@ -296,15 +332,19 @@ export default {
     padding: 0.5rem 1rem 1rem 1rem;
     border-radius: 0.5rem;
     background: #f0f2f5;
+    max-width: 90%;
 }
 
 .usernameComment {
     margin: 2px 0 4px 0;
     font-size: unset;
+    text-align: start;
 }
 
 .divUserContent p {
     margin: 0 0 0 -5px;
+    word-break: break-all;
+    width: 100%;
 }
 
 .divImage {

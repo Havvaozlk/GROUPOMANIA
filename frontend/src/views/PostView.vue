@@ -1,21 +1,30 @@
 <template>
-<NavU/>
-<div class="container">
-<div class="Posts">
-<div class="createPost">
-<textarea id='textarea' placeholder='Exprimez-vous'></textarea>
-<label id="idInput">a
-<input @change="newFile( $event )" type='file' id="file" name='image'>
-</label>
-<button @click="newPost" type="text" class='partager'>PARTAGER</button>
-<p v-if="error" id="msgError">
-      {{ error }}
-    </p>
-</div>
-<getPosts/>
-</div>
-</div>
-
+  <div>
+    <NavU />
+    <div class="container">
+      <div class="Posts">
+        <div class="createPost">
+          <textarea id="textarea" placeholder="Exprimez-vous"></textarea>
+          <label id="idInput"
+            >a
+            <input
+              @change="newFile( $event )"
+              type="file"
+              id="file"
+              name="image"
+            />
+          </label>
+          <button @click="newPost" type="text" class="partager">
+            PARTAGER
+          </button>
+          <p v-if="error" id="msgError">
+            {{ error }}
+          </p>
+        </div>
+        <getPosts />
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 import NavU from '../components/NavU';
@@ -39,20 +48,23 @@ export default {
        error:"",
     };
   },
+
+  mounted() {
+    if(localStorage.getItem("token") == null) {
+      this.$router.push("/login")
+    }
+  },
   methods: {
     newFile( event ) {
     this.image = event.target.files[0];
-  },
+    },
        async newPost() {
           const formData = new FormData();
           formData.append("userId", parseInt(localStorage.getItem('userId')));
           formData.append('content', document.getElementById('textarea').value);
-          formData.append('image', this.image);
-          if (formData.get("content") == "") {
-        this.error = "Message vide";
-      } else {
-        await axios
-        .post("http://localhost:8000/api/post", formData, {
+          formData.append('image', this.image)
+          await axios
+          .post("http://localhost:8000/api/post", formData, {
             headers: {
               "Content-Type": "multipart/form-data",
               Authorization: "Bearer " + this.token,
@@ -62,10 +74,9 @@ export default {
             window.location.reload()
           })
           .catch((error) => (this.msgError = error));
-      }
-  },
-  
-}
+        },
+
+  }
 }
 </script>
 <style>

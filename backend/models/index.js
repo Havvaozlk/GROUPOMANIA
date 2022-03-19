@@ -1,4 +1,4 @@
-
+//fichier configuration de Sequelize
 const dbConfig = require('../config/db');
 const Sequelize = require("sequelize");
 const path = require('path');
@@ -29,6 +29,17 @@ db.sequelize = sequelize;
 db.users = require("./user")(sequelize, Sequelize);
 db.posts = require('./post')(sequelize, Sequelize);
 db.comments= require('./comment')(sequelize, Sequelize);
+
+db.users.hasMany(db.posts)
+db.posts.belongsTo(db.users, {onDelete: "CASCADE",})
+
+db.posts.hasMany(db.comments)
+db.comments.belongsTo(db.posts, {onDelete: "CASCADE",})
+
+db.users.hasMany(db.comments)
+db.comments.belongsTo(db.users, {onDelete: "CASCADE",})
+
+db.sequelize.sync();
 
 module.exports = db;
 

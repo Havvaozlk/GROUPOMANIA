@@ -10,10 +10,6 @@ require('dotenv').config();
 require('./config/db')
 const path = require('path');
 const db = require('./models');
-//const sequelize = require('sequelize');
-db.sequelize.sync({force: false});
-
-
 
 //Nous avons des erreurs de CORS, on va donc des headers
 //Le middleware permet à toutes les demandes de toutes les origines d'accéder à votre API
@@ -24,7 +20,6 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
     //on donne l'autorisation d'utiliser certaines méthodes: GET, POST..
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-    res.setHeader('Cache-Control', 'max-age=31536000');
     next();
 });
 

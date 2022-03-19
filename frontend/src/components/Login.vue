@@ -1,13 +1,13 @@
 <template>
-<form id="form">
-<input type='email' id='email' placeholder='Adresse email'>
-<input type='password' id='password' placeholder='Mot de passe'>
-<input type='submit' value='SE CONNECTER'>
-<a href='#'>Mot de passe oublié ? </a>
-<div class='signup'>
-<button type='button' class='buttonToSignup'>CREER UN COMPTE</button>
-</div>
-</form>
+  <form id="form">
+    <input type="email" id="email" placeholder="Adresse email" />
+    <input type="password" id="password" placeholder="Mot de passe" />
+    <input type="submit" value="SE CONNECTER" />
+    <a href="#">Mot de passe oublié ? </a>
+    <div class="signup">
+      <button type="button" class="buttonToSignup">CREER UN COMPTE</button>
+    </div>
+  </form>
 </template>
 <script>
 export default {

@@ -11,29 +11,16 @@ module.exports = (sequelize, Sequelize) => {
         autoIncrement :true
       },
       content: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       status: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       imageUrl: {
-          type: Sequelize.STRING
+          type: Sequelize.STRING,
       },
-      userId: {
-        type: Sequelize.STRING
-      }
     },
-    {
-        sequelize,
-        modelName: 'Post',
-    });
+    );
 
-    Post.associate = function (models) {
-      post.belongsTo(models.users, {
-        foreignKey: 'userId',
-        as:'users',
-        onDelete:'CASCADE',
-      })
-    }
     return Post;
   };

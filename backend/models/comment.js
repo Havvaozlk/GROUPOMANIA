@@ -3,32 +3,19 @@ module.exports = (sequelize, Sequelize) => {
     const Comment = sequelize.define("comment", {
       id: {
         type: Sequelize.INTEGER,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement :true
       },
       content: {
         type: Sequelize.STRING
       },
-      userId: {
+      creatorFirstName: {
         type: Sequelize.STRING
       },
-      postId : {
-        type:Sequelize.INTEGER
-      }
+      creatorLastName: {
+        type: Sequelize.STRING
+      },
     },
-    {
-        sequelize,
-        modelName: 'User',
-    });
-
-    Comment.associate = function (models) {
-      Comment.belongsTo(models.User, {
-        foreignKey: 'userId',
-       
-      });
-      Comment.belongsTo(models.Post, {
-        foreignKey: 'postId',
-        onDelete: 'CASCADE', // Si on supprime un message, on supprime ses réponses //
-      });
-    }
+    );
     return Comment;
   };

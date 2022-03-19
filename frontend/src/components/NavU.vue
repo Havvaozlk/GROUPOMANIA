@@ -1,17 +1,24 @@
- <template>
- 
- <header>
-   <div class="divLogo">
-      <img src="../assets/icon-left-font.png"  alt="le logo de gropomania" title="logo groupomania" id="logo" />
-   </div>
-   <div class="divNav">
-      <router-link to="/post" role="button" class="accueilButton">ACCUEIL</router-link>
-      <router-link to="/profile" role='button' class='profileButton'>MON PROFILE</router-link>
-      <button @click="Logout" type='button' class='LogoutButton'>DECONNEXION</button>
+<template>
+  <header>
+    <div class="divLogo">
+      <img
+        src="../assets/icon-left-font.png"
+        alt="le logo de gropomania"
+        title="logo groupomania"
+        id="logo"
+      />
     </div>
- </header>
+    <div class="divNav">
+      <router-link to="/post" role="button" class="accueilButton"
+        >ACCUEIL</router-link
+      >
+      <router-link to="/profile" role="button" class="profileButton"
+        >PROFIL</router-link
+      >
+      <a @click="Logout" type="button" class="LogoutButton">DECONNEXION</a>
+    </div>
+  </header>
 </template>
-
 
 <script>
 export default {
@@ -20,12 +27,10 @@ export default {
   methods: {
     Logout() {
       localStorage.clear();
-      this.$router.push("/login");
+      this.$router.push("/");
     }
   }
-  }
-
-  
+}
 </script>
 
 <style>
@@ -97,6 +102,9 @@ header{
   header {
     flex-direction: column;
     height:10rem;
+  }
+  .divNav {
+    width: auto;
   }
 
 

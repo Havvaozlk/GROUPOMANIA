@@ -6,16 +6,16 @@
       <div v-on:click="toggleModale" class="btn-modale btn btn-danger">X</div>
       <h2>MODIFIER VOTRE PROFIL</h2>
       <div class="update">
-      <label for="lastName1" class="labelLastName">Nom *</label>
-      <input v-model="lastName" id="lastName1" class="input" required>
+        <label for="lastName1" class="labelLastName">Nom *</label>
+        <input v-model="lastName" id="lastName1" class="input" required />
       </div>
       <div class="update">
-      <label for="firstName1" class="labelFirstName">Prénom *</label>
-      <input v-model="firstName" id="firstName1" class="input" required>
+        <label for="firstName1" class="labelFirstName">Prénom *</label>
+        <input v-model="firstName" id="firstName1" class="input" required />
       </div>
       <div class="update">
-      <label for="email1" class="labelEmail">Email *</label>
-      <input v-model="email" id="email1" class="input" required>
+        <label for="email1" class="labelEmail">Email *</label>
+        <input v-model="email" id="email1" class="input" required />
       </div>
       <button class="saveButton" @click="updateProfil">ENREGISTRER</button>
     </div>
@@ -28,7 +28,7 @@ export default {
   name: "modaleProfile",
   props: ["revele", "toggleModale"],
 
-   data() {
+  data() {
         return {
             PfirstName: localStorage.getItem('firstName'),
             PlastName: localStorage.getItem('lastName'),
@@ -37,50 +37,32 @@ export default {
             lastName: "",
             email: "",
             userId: localStorage.getItem('userId'),
-            
+
         }
-},
-methods: {
-//     updateProfil() {
-//         const userId= this.userId;
-//         const formData = new FormData();
-//                 formData.append("firstName", this.firstName);
-//                 formData.append("lastName", this.lastName);
-//                 formData.append("email", this.email);
-                
+  },
+  methods: {
+    updateProfil() {
+        const userId= this.userId;
+        const content= {
+          firstName: this.firstName,
+          lastName: this.lastName,
+          email: this.email,
+        }
 
-//                 axios.put('http://localhost:8000/api/user/' + userId , formData, {
-//                     headers: {
-//                         'Authorization': 'Bearer ' + localStorage.getItem('token'),
-//                         'Content-Type': 'multipart/form-data'
-//                     }
-//                 })
-//                 .then((response) => {
-//                     this.firstName = response.data.firstName;
-//                     this.lastName = response.data.lastName;
-//                     this.email = response.data.email;
-//                     console.log("firstName" + this.firstName)
-//                 })
-//                 .catch(error => console.log(error))
-//                 }
-// }
-  updateProfil() {
-    const userId= this.userId;
-    axios.put("http://localhost:8000/api/user/" + userId, {
-      firstName: document.getElementById('firstName1').value,
-      lastName: document.getElementById("lastName1").value,
-      email: document.getElementById("email1").value,
-    })
-    .then((res) => {
-      localStorage.setItem('firstName', res.data.firstName);
-          localStorage.setItem('lastName', res.data.lastName);
-          localStorage.setItem('email', res.data.email);
-
-          this.$router.push("/profile");
-    })
-    .catch(error => console.log(error))
+                axios.put(`http://localhost:8000/api/user/update/${userId}` , content, {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    }
+                })
+                .then((response) => {
+                    localStorage.setItem("firstName", response.data.users.firstName);
+                    localStorage.setItem("lastName", response.data.users.lastName);
+                    localStorage.setItem("email", response.data.users.email);
+                    this.$router.push("/post")
+                })
+                .catch(error => console.log(error))
+    }
   }
-}
 }
 </script>
 

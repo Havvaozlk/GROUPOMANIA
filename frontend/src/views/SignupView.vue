@@ -1,17 +1,47 @@
 <template>
-<div class='home'>
-<img alt='Groupomania logo' src="../assets/icon-above-font.png" />
-<p class="NavP"> Avec Groupomania, partagez et rester en contact avec vos collègues. </p>
-<form id="form" @submit.prevent="signup()">
-<input  v-model="dataSignup.firstName" type='text' id='firstName' class="signupInput" placeholder='Prénom'/>
-<input v-model="dataSignup.lastName" type='text' id='lastName' class="signupInput" placeholder='Nom'/>
-<input v-model="dataSignup.email" type='email' id='mail' class="signupInput" placeholder='Adresse email'/>
-<input v-model="dataSignup.password" type='password' id='passwordSignup' class="signupInput" placeholder='Mot de passe'/>
-<p v-if="error" class="ErrorMessage"> {{error}}</p>
-<button @click.prevent="signup" type='submit' class='buttonSignup'>S'INSCRIRE</button>
-<router-link to="/login" role='button' class='loginButton'>Vous avez déjà un compte ?</router-link>
-</form>
-</div>
+  <div class="home">
+    <img alt="Groupomania logo" src="../assets/icon-above-font.png" />
+    <p class="NavP">
+      Avec Groupomania, partagez et rester en contact avec vos collègues.
+    </p>
+    <form id="form" @submit.prevent="signup()">
+      <input
+        v-model="dataSignup.firstName"
+        type="text"
+        id="firstName"
+        class="signupInput"
+        placeholder="Prénom"
+      />
+      <input
+        v-model="dataSignup.lastName"
+        type="text"
+        id="lastName"
+        class="signupInput"
+        placeholder="Nom"
+      />
+      <input
+        v-model="dataSignup.email"
+        type="email"
+        id="mail"
+        class="signupInput"
+        placeholder="Adresse email"
+      />
+      <input
+        v-model="dataSignup.password"
+        type="password"
+        id="passwordSignup"
+        class="signupInput"
+        placeholder="Mot de passe"
+      />
+      <p v-if="error" class="ErrorMessage">{{error}}</p>
+      <button @click.prevent="signup" type="submit" class="buttonSignup">
+        S'INSCRIRE
+      </button>
+      <router-link to="/" role="button" class="loginButton"
+        >Vous avez déjà un compte ?</router-link
+      >
+    </form>
+  </div>
 </template>
 
 <script>
@@ -31,19 +61,9 @@ export default {
           error:"",
           
       };
-  },
+    },
   methods: {
       signup() {
-        // if (
-        //  this.firstName == "" || this.firstName== null ||
-        // this.lastName == "" || this.lastName == null ||
-        // this.email == "" || this.email == null ||
-        // this.password == "" || this.password == null) {
-        //   return this.error= "Veuillez remplir tout les champs de saisie."
-        // }
-        
-        //  else {
-
           axios
           .post("http://localhost:8000/api/user/signup", {
             firstName: document.getElementById('firstName').value,
@@ -51,21 +71,15 @@ export default {
             email: document.getElementById("mail").value,
             password: document.getElementById("passwordSignup").value
           })
-          .then((res) => {
-        localStorage.setItem("token", res.data.token);
-          localStorage.setItem("userId", res.data.userId);
-          localStorage.setItem("admin", res.data.admin);
-          localStorage.setItem('firstName', res.data.firstName);
-          localStorage.setItem('lastName', res.data.lastName);
-          localStorage.setItem('email', res.data.email);
-
-          this.$router.push("/post");
+          .then(() => {
+          this.$router.push("/");
           })
           .catch(() => {
           this.error = "L'adresse mail doit être unique et le mot de passe doit comporter minimum 8 caractères avec au moins un chiffre, une majuscule, une minuscule sans espaces."
           })     
-          // }
-  }}
+          
+      }
+  }
 };
 </script>
 

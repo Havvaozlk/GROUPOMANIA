@@ -11,11 +11,15 @@ module.exports = (req, res, next) => {
     //on extrait le token du header authorization.
     //on utilise la fonction split pour récupérer tout après l'espace dans le header.
     const token = req.headers.authorization.split(' ')[1];
+    console.log(token);
     //on decode le token avec le package jwt et la fonction verify
     const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+   // console.log(decodedToken);
     //on recupere le userId qui est dedans
     const userId = decodedToken.userId;
-    req.auth = {userId};
+    const admin = decodedToken.admin
+    req.auth = {userId, admin};
+
     //si on a un userIddans le corps de la requete et si celui ci est different
     if (req.body.userId && req.body.userId !== userId) {
       throw 'Invalid user ID';
