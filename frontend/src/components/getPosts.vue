@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; flex-direction: column; align-items: center">
+  <div style="display: flex; flex-direction: column; align-items: center; width:90%">
     <div v-for="post in posts" :key="post.id" class="postList">
       <div class="blocauthor">
         <div class="user">
@@ -43,6 +43,7 @@
                 alt="avatar utilisateur"
               />
             </div>
+            <div id="responsiveComment" style="display:flex">
             <div class="divUserContentDate">
               <div class="divUserContent">
                 <h3 class="usernameComment">
@@ -65,6 +66,7 @@
               >
                 Supprimer X
               </button>
+              </div>
             </div>
           </div>
         </div>
@@ -288,6 +290,7 @@ export default {
     height: 0.9rem;
     font-size: unset;
     text-align: start;
+    height: auto;
 }
 
 .date {
@@ -378,5 +381,20 @@ export default {
   .sendComment {
       width: 50%;
   }
+
+  #responsiveComment {
+    flex-direction: column;
+    align-items: baseline;
+  }
+
+  .dateComment {
+    margin-bottom: 0;
+  }
+
+  .deleteComment {
+    margin-bottom: 1rem;
+  }
+
+
 }
 </style>
