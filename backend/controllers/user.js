@@ -3,14 +3,12 @@
 const bcrypt = require('bcrypt');
 //on importe notre modele user
 const models = require('../models/index');
-const { users } = require('../models/index');
-const auth = require('../middleware/auth');
 const passwordValidator = require('password-validator');
 //on installe et importe le package pour créer et vérifier les tokens d'authentification
 //qui permettent aux utilisateurs de ne se connecter qu'une seule fois à leur compte 
 const jwt = require('jsonwebtoken');
 const emailValidator = require('email-validator');
-const user = require('../models/user');
+const User = models.users
 
 var schema = new passwordValidator();
 schema
@@ -23,39 +21,50 @@ schema
 .is().not().oneOf(['Passw0rd', 'Password123']); //ne doit pas etre égale à
 
 //fonction inscription
-exports.signup = (req, res, next) => {
+exports.signup = async (req, res, next) => {
   if(req.body.email == null || req.body.email == '' || req.body.firstName == null || req.body.firstName == ''|| req.body.password == null || req.body.password == '' || req.body.lastName == null || req.body.lastName == '') {
     return res.status(400).json({ error: 'Tous les champs doivent être renseignés' });
 }
 if (!emailValidator.validate(req.body.email)) {
   return res.status(400).json({error: "Adresse mail invalide"})
 }
-  if (!schema.validate(req.body.password))  {  
-    return res.status(400).json({error: "erreur mot de passe"}) 
-  } else {
-    //on hash le mot de passe avec bcrypt, on lui passe le mot de passe et le nombre de tour que l'algorithme va faire
-    bcrypt.hash(req.body.password, 10)
+if (!schema.validate(req.body.password))  {
+  return res.status(400).json({error: "erreur mot de passe"}) 
+}
+try {
+  // Vérification si l'utilisateur existe déjà
+  let user = await User.findOne({ where: { email: req.body.email }});
+  if (user !== null) {
+    return res
+      .status(400)
+      .json({ error: `Email déjà utilisé` });
+  }
+  bcrypt.hash(req.body.password, 10)
         //on récupere le hash de mdp
-        .then(hash => {
-            //on crée le nouvel utilisateur avecnotre modele Mongoose
-            models.users.create({
-                id: req.body.id,
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                email: req.body.email,
-                password: hash,
-                admin: false,
-            })
-                .then((users) => res.status(200).json({
-                    message: "utilisateur crée !"
-                }));
-            })
-                .catch(error => res.status(500).json({ error }));
-          }}
+      .then(hash => {
+      //on crée le nouvel utilisateur
+        User.create({
+          id: req.body.id,
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          email: req.body.email,
+          password: hash,
+          admin: false,
+        })
+        .then(() => res.status(200).json({error: "utilisateur crée !"}));
+      })
+      .catch(error => res.status(500).json({ error }));
+} catch (err) {
+  if (err.name == "SequelizeDatabaseError") {
+    return res.status(500).json({ error: "Database Error"});
+  }
+  return res.status(500).json({ error: "Hash Process Error"});
+}
+}
 
  //fonction pour se connecter a un compte existant
 exports.login = (req, res, next) => {
-    models.users.findOne({ 
+    User.findOne({ 
          where: {email: req.body.email}
     })
       .then(users => {
@@ -97,7 +106,7 @@ exports.login = (req, res, next) => {
 
 //fonction pour supprimer son compte
 exports.deleteUser = (req, res, next) => {
-  models.users.findOne ({
+  User.findOne ({
     where: {id :req.params.id}
   })
   .then(users => {
@@ -108,7 +117,7 @@ exports.deleteUser = (req, res, next) => {
           error : new Error('Unauthorized request!')
         })
       } else {
-  models.users.destroy({where: {id: req.params.id}})
+  User.destroy({where: {id: req.params.id}})
   .then(() => res.status(200).json({message: 'Compte supprimé !'}))
   .catch(error => res.status(400).json({error}));
      
@@ -119,7 +128,7 @@ exports.deleteUser = (req, res, next) => {
 
 // afficher tout les utilisateurs
   exports.getAllUsers = (req, res, next) => {
-     models.users.findAll({attributes : ['id', 'email', 'firstName', 'lastName', 'admin']})
+     User.findAll({attributes : ['id', 'email', 'firstName', 'lastName', 'admin']})
     .then((users) => res.status(200).json(users))
         .catch(error => res.status(400).json({ error }));
 }
@@ -127,7 +136,7 @@ exports.deleteUser = (req, res, next) => {
 
 //afficher un utilisateur
 exports.getOneUser = (req,res, next) => {
-  models.users.findOne({
+  User.findOne({
     where: {id: req.params.id}
   })
   .then((user) => res.status(200).json(user))
@@ -136,14 +145,14 @@ exports.getOneUser = (req,res, next) => {
 
 //modifier son profil
 exports.updateUser = (req, res, next) => {
-  models.users.findByPk(req.params.id)
+  User.findByPk(req.params.id)
     .then((oldUser) => {
       if (oldUser.id !== req.auth.userId) {
         return res.status(403).json({
           error: new Error('Unauthorized request!')
         });
       }
-          models.users.update({ ...req.body}, { where: { id: req.params.id } })
+      User.update({ ...req.body}, { where: { id: req.params.id } })
             .then(() => res.status(200).json({
               message: 'Profil modifié !',
               users : {

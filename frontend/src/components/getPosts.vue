@@ -72,10 +72,11 @@
         </div>
         <div class="divComment">
           <textarea
+            @click="display(post.id)"
             v-model="content"
             type="text"
+            v-bind:class="{ unDisplay: !displayComment.find(elem => elem == post.id)}"
             class="comment"
-            placeholder="Ecrire un commentaire.."
           ></textarea>
           <button @click="sendComment(post.id)" type="text" class="sendComment">
             COMMENTER
@@ -106,6 +107,7 @@ export default {
             content:"",
             comments:[],
             comment: "",
+            displayComment: [],
             error:""
         }
     },
@@ -143,6 +145,11 @@ export default {
     },
 
     methods: {
+        display(id) {
+          this.displayComment= [],
+          this.content= '',
+          this.displayComment.push(id)
+        },
         pushCurrent(id) {
             let data = {
                 postId: id,
@@ -186,7 +193,8 @@ export default {
                     console.log("content" + this.content)
                 })
                 .catch(error => console.log(error))
-
+                this.content="",
+                this.displayComment=[]
             },
             deleteComment(id) {
                   axios.delete('http://localhost:8000/api/comment/' + id, {
@@ -206,8 +214,8 @@ export default {
 }
 </script>
 <style>
-.disabled {
-    color: white;
+.unDisplay {
+    color: transparent;
 }
 .postList {
     width: 90%;
@@ -370,6 +378,11 @@ export default {
     background: transparent;
     color: grey;
     cursor: pointer;
+}
+
+#responsiveComment {
+  justify-content: space-between;
+  flex-direction: row;
 }
 
 @media screen and (max-width:700px) {
